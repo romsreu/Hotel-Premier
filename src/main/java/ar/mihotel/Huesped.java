@@ -1,5 +1,4 @@
 package ar.mihotel;
-
 import java.util.Date;
 
 public class Huesped {
