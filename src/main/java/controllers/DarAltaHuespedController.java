@@ -2,7 +2,6 @@ package controllers;
 
 import ar.utn.hotel.hotel_premier.HotelPremier;
 import enums.PopUpType;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -13,13 +12,6 @@ import utils.GeorefCache;
 import utils.Validator;
 import utils.Validator.*;
 
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DarAltaHuespedController {
@@ -61,8 +53,6 @@ public class DarAltaHuespedController {
     @FXML private ImageView codPostalO;
     @FXML private ImageView cuitO;
 
-    // === CLIENTE HTTP (se reutiliza para todas las llamadas) ===
-    private final HttpClient http = HttpClient.newHttpClient();
     private Validator validator;
     @FXML
     public void initialize() {
@@ -127,7 +117,7 @@ public class DarAltaHuespedController {
         validator.addRule(txtOcupacion, ocupacionO).required();
         validator.addRule(comboTipoDoc, tipodniO).required();
         validator.addRule(txtNumDoc, numdniO).required();
-        validator.addRule(txtCuit, cuitO).required().cuit();
+        validator.addRule(txtCuit, cuitO).required().cuitCoincideCon(txtNumDoc);
         validator.addRule(txtNumDoc, numdniO).required().dni();
 
     }

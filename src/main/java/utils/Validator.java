@@ -59,6 +59,8 @@ public class Validator {
         protected boolean dni = false;
         protected boolean cuit = false;
         protected boolean pasaporte = false;
+        protected TextField dniRelacionado = null;
+
 
         public ValidationRule(Node campo, ImageView icono) {
             this.campo = campo;
@@ -126,11 +128,28 @@ public class Validator {
             // CUIT: 11 dígitos (solo números)
             // =============================
             if (cuit) {
-                String digitos = soloDigitos(value);
-                if (digitos.length() != 11) {
+
+                String digitosCuit = soloDigitos(value);
+
+                if (digitosCuit.length() != 11) {
                     showError("El CUIT debe tener 11 dígitos",
                             "/images/incompleto.png");
                     return false;
+                }
+
+                if (dniRelacionado != null) {
+                    String digitosDni = soloDigitos(dniRelacionado.getText());
+
+                    if (digitosDni.length() == 8) {
+                        // los 8 del medio
+                        String cuitMiddle = digitosCuit.substring(2, 10);
+
+                        if (!cuitMiddle.equals(digitosDni)) {
+                            showError("El CUIT no coincide con el DNI",
+                                    "/images/incompleto.png");
+                            return false;
+                        }
+                    }
                 }
             }
 
@@ -211,6 +230,15 @@ public class Validator {
             this.cuit = true;
             return this;
         }
+
+        public FieldValidator cuitCoincideCon(TextField dniField) {
+            this.cuit = true;          // activa validación de cuit
+            this.dniRelacionado = dniField;
+            return this;
+        }
+
+
+
 
         public FieldValidator pasaporte() {
             this.pasaporte = true;
