@@ -7,9 +7,10 @@
 
         <!-- === Conexión a PostgreSQL === -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/javaBDD</property>
-        <property name="hibernate.connection.username">postgres</property>
-        <property name="hibernate.connection.password">123456aA</property>
+
+        <property name="hibernate.connection.url">jdbc:postgresql://ep-flat-fog-ac6vfa02-pooler.sa-east-1.aws.neon.tech:5432/hotelpremier?sslmode=require</property>
+        <property name="hibernate.connection.username">neondb_owner</property>
+        <property name="hibernate.connection.password">npg_KsfwED41lrRA</property>
 
         <!-- === Dialecto específico de PostgreSQL === -->
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
@@ -29,9 +30,10 @@
              none → desactiva totalmente -->
 
         <!-- === Mapeo de entidades === -->
-        <mapping class="com.example.hotel.entity.Direccion"/>
-        <mapping class="com.example.hotel.entity.Huesped"/>
-        <mapping class="com.example.hotel.entity.Persona"/>
+        <mapping class="ar.utn.hotel.model.Persona"/>
+        <mapping class="ar.utn.hotel.model.Direccion"/>
+        <mapping class="ar.utn.hotel.model.Huesped"/>
+
 
     </session-factory>
 </hibernate-configuration>

@@ -1,4 +1,4 @@
-package ar.utn.hotel.enums;
+package enums;
 
 public enum PopUpType {
     SUCCESS,

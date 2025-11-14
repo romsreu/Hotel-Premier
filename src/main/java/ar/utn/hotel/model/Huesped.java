@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@PrimaryKeyJoinColumn(name = "id_persona")
 public class Huesped extends Persona {
 
     private String numeroDocumento;

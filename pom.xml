@@ -98,7 +98,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>ar.utn.hotel.Main</mainClass>
+                            <mainClass>ar.utn.hotel.HotelPremier</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
