@@ -1,13 +1,28 @@
 package ar.utn.hotel.gestor;
+
 import ar.utn.hotel.dao.DireccionDAO;
 import ar.utn.hotel.dao.HuespedDAO;
+import ar.utn.hotel.dao.impl.DireccionDAOImpl;
+import ar.utn.hotel.dao.impl.HuespedDAOImpl;
 import ar.utn.hotel.dto.DarAltaHuespedDTO;
 import ar.utn.hotel.model.*;
 
 public class GestorHuesped {
 
-    private final DireccionDAO direccionDAO = new DireccionDAO();
-    private final HuespedDAO huespedDAO = new HuespedDAO();
+    private final DireccionDAO direccionDAO;
+    private final HuespedDAO huespedDAO;
+
+    // Constructor por defecto con implementaciones concretas
+    public GestorHuesped() {
+        this.direccionDAO = new DireccionDAOImpl();
+        this.huespedDAO = new HuespedDAOImpl();
+    }
+
+    // Constructor para inyección de dependencias (útil para testing)
+    public GestorHuesped(DireccionDAO direccionDAO, HuespedDAO huespedDAO) {
+        this.direccionDAO = direccionDAO;
+        this.huespedDAO = huespedDAO;
+    }
 
     public Huesped cargar(DarAltaHuespedDTO dto) {
 

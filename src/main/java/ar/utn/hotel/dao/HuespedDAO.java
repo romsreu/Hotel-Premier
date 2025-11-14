@@ -1,22 +1,8 @@
 package ar.utn.hotel.dao;
 
 import ar.utn.hotel.model.Huesped;
-import ar.utn.hotel.utils.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
-public class HuespedDAO {
+public interface HuespedDAO {
 
-    public Huesped guardar(Huesped huesped) {
-        Transaction tx = null;
-        try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-            tx = s.beginTransaction();
-            s.persist(huesped);
-            tx.commit();
-            return huesped;
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            throw e;
-        }
-    }
+    Huesped guardar(Huesped huesped);
 }
