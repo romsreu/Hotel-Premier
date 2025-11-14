@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root" prefWidth="350" prefHeight="180"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.PopUpController">
+
+    <VBox spacing="15" alignment="CENTER" layoutX="0" layoutY="0"
+          prefWidth="350" prefHeight="180">
+
+        <Label fx:id="lblIcon" style="-fx-font-size: 40;" />
+        <Label fx:id="lblMensaje" wrapText="true" style="-fx-font-size: 16;" />
+
+        <Button text="Aceptar" fx:id="btnAceptar" onAction="#cerrar"
+                style="-fx-padding: 8 20; -fx-background-radius: 8;" />
+    </VBox>
+
+</AnchorPane>

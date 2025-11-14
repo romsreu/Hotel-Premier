@@ -1,20 +1,28 @@
 package ar.utn.hotel.model;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
-@Data
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "direccion")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class Direccion {
-    private int idDireccion;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_direccion")
+    private Long id;
+
     private String calle;
-    private int numero;
+    private String numero;
     private String departamento;
-    private int piso;
-    private int codPostal;
+    private String piso;
+    private String codPostal;
     private String localidad;
-    private String pais;
     private String provincia;
+    private String pais;
 }

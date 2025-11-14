@@ -1,0 +1,178 @@
+/* ==========================================================
+   HOTEL PREMIER - ESTILOS DE FORMULARIO (Separado por tipo)
+   ========================================================== */
+
+/* ==========================================================
+   🔹 TEXTFIELD
+   ========================================================== */
+.text-field {
+    -fx-background-color: linear-gradient(to bottom right, #fdfdfd, #e9edf2);
+    -fx-border-color: #cba44b;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1.3;
+    -fx-font-family: "Lucida Bright";
+    -fx-font-size: 13px;
+    -fx-text-fill: #1f1f1f;
+    -fx-prompt-text-fill: rgba(90, 90, 90, 0.6);
+    -fx-padding: 6 10 6 10;
+    -fx-pref-height: 28px;
+    -fx-min-height: 28px;
+    -fx-max-height: 28px;
+}
+
+.text-field:hover {
+    -fx-border-color: #e8c868;
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f6f1e4);
+    -fx-effect: dropshadow(gaussian, rgba(255,230,150,0.25), 8, 0.3, 0, 1);
+}
+
+.text-field:focused {
+    -fx-border-color: #f6d97f;
+    -fx-border-width: 2;
+    -fx-background-color: linear-gradient(to bottom right, #fffef5, #f9f4e8);
+    -fx-effect: dropshadow(gaussian, rgba(255,220,120,0.4), 10, 0.4, 0, 1);
+}
+
+/* ==========================================================
+   🔹 COMBOBOX
+   ========================================================== */
+.combo-box {
+    -fx-background-color: linear-gradient(to bottom right, #fdfdfd, #e9edf2);
+    -fx-border-color: #cba44b;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1.3;
+    -fx-font-family: "Lucida Bright";
+    -fx-font-size: 13px;
+    -fx-text-fill: #1f1f1f;
+    -fx-prompt-text-fill: rgba(90, 90, 90, 0.6);
+    -fx-pref-height: 28px;
+    -fx-min-height: 28px;
+    -fx-max-height: 28px;
+}
+
+/* texto del item seleccionado */
+.combo-box .list-cell {
+    -fx-text-fill: #1f1f1f;
+    -fx-font-size: 13px;
+}
+
+/* Hover */
+.combo-box:hover {
+    -fx-border-color: #e8c868;
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f6f1e4);
+}
+
+/* Focus */
+.combo-box:focused {
+    -fx-border-color: #f6d97f;
+    -fx-border-width: 2;
+    -fx-background-color: linear-gradient(to bottom right, #fffef5, #f9f4e8);
+}
+
+/* Flecha ▼ */
+.combo-box .arrow {
+    -fx-shape: "M0,0 L6,0 L3,5 Z";
+    -fx-background-color: #cba44b;
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8 0 8;
+}
+
+.combo-box:hover .arrow {
+    -fx-background-color: #f1cc69;
+}
+
+/* Popup */
+.combo-box-popup .list-view {
+    -fx-background-color: linear-gradient(to bottom right, #fffdf5, #f8f4e6);
+    -fx-border-color: #cba44b;
+}
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f6e3a8;
+}
+
+/* ==========================================================
+   🔹 DATEPICKER
+   ========================================================== */
+.date-picker {
+    -fx-border-color: #cba44b;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1.3;
+    -fx-font-family: "Lucida Bright";
+    -fx-font-size: 13px;
+    -fx-text-fill: #1f1f1f;
+    -fx-prompt-text-fill: rgba(90, 90, 90, 0.6);
+    -fx-pref-height: 28px;
+    -fx-min-height: 28px;
+    -fx-max-height: 28px;
+}
+
+/* campo interno */
+.date-picker > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1f1f1f;
+}
+
+/* Hover */
+.date-picker:hover {
+    -fx-border-color: #e8c868;
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f6f1e4);
+}
+
+/* Focus */
+.date-picker:focused {
+    -fx-border-color: #f6d97f;
+    -fx-border-width: 2;
+    -fx-background-color: linear-gradient(to bottom right, #fffef5, #f9f4e8);
+}
+
+/* Botón de calendario */
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8 0 8;
+}
+
+/* Fondo superior del calendario */
+.date-picker-popup > .month-year-pane {
+    -fx-background-color: linear-gradient(to bottom, #243b55, #141e30);
+}
+
+/* Texto del mes y año */
+.date-picker-popup > .month-year-pane .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Botones de navegación (← →) */
+.date-picker-popup > .month-year-pane .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.date-picker-popup > .month-year-pane .button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-text-fill: #f7d97b; /* dorado al pasar el mouse */
+}
+
+.date-picker:hover .arrow {
+    -fx-background-color: #f1cc69;
+}
+
+/* popup calendario */
+.date-picker-popup > .month-year-pane {
+    -fx-background-color: linear-gradient(to bottom, #243b55, #141e30);
+}
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #f8eac1;
+}
+.date-picker-popup .day-cell:focused {
+    -fx-background-color: #C9A66B;
+    -fx-text-fill: white;
+}

@@ -1,64 +1,63 @@
 package ar.utn.hotel.gestor;
-
+import ar.utn.hotel.dao.DireccionDAO;
 import ar.utn.hotel.dao.HuespedDAO;
-import ar.utn.hotel.dto.HuespedDTO;
-import ar.utn.hotel.dto.ReservaDTO;
-
-import java.util.List;
+import ar.utn.hotel.dto.DarAltaHuespedDTO;
+import ar.utn.hotel.model.*;
 
 public class GestorHuesped {
 
-    private final HuespedDAO huespedDAO;
+    private final DireccionDAO direccionDAO = new DireccionDAO();
+    private final HuespedDAO huespedDAO = new HuespedDAO();
 
-    public GestorHuesped(HuespedDAO huespedDAO) {
-        this.huespedDAO = huespedDAO;
-    }
+    public Huesped cargar(DarAltaHuespedDTO dto) {
 
-    public boolean registrarHuesped(HuespedDTO huesped) {
-        try {
-            huespedDAO.create(huesped);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Error al registrar huésped: " + e.getMessage());
-            return false;
+        // 1) Buscar o crear Dirección
+        Direccion dir = direccionDAO.buscarPorDatos(
+                dto.getCalle(),
+                dto.getNumero(),
+                dto.getDepto(),
+                dto.getPiso(),
+                dto.getCodPostal(),
+                dto.getLocalidad(),
+                dto.getProvincia(),
+                dto.getPais()
+        );
+
+        if (dir == null) {
+            dir = Direccion.builder()
+                    .calle(dto.getCalle())
+                    .numero(dto.getNumero())
+                    .departamento(dto.getDepto())
+                    .piso(dto.getPiso())
+                    .codPostal(dto.getCodPostal())
+                    .localidad(dto.getLocalidad())
+                    .provincia(dto.getProvincia())
+                    .pais(dto.getPais())
+                    .build();
+
+            direccionDAO.guardar(dir);
         }
-    }
 
-    public boolean actualizarHuesped(HuespedDTO huesped) {
-        try {
-            huespedDAO.update(huesped);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Error al actualizar huésped: " + e.getMessage());
-            return false;
-        }
-    }
+        // 2) Crear Huesped directamente (hereda de Persona)
+        Huesped huesped = new Huesped();
 
-    public boolean eliminarHuesped(Long id) {
-        try {
-            huespedDAO.delete(id);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Error al eliminar huésped: " + e.getMessage());
-            return false;
-        }
-    }
+        // Datos de Persona (clase padre)
+        huesped.setNombre(dto.getNombre());
+        huesped.setApellido(dto.getApellido());
+        huesped.setTelefono(dto.getTelefono());
+        huesped.setDireccion(dir);
 
-    public HuespedDTO buscarPorDocumento(String tipoDoc, String nroDoc) {
-        List<HuespedDTO> huespedes = huespedDAO.findAll();
-        return huespedes.stream()
-                .filter(h -> h.getTipoDocumento().equalsIgnoreCase(tipoDoc)
-                        && h.getNroDocumento().equalsIgnoreCase(nroDoc))
-                .findFirst()
-                .orElse(null);
-    }
+        // Datos específicos de Huesped
+        huesped.setNumeroDocumento(dto.getNumeroDocumento());
+        huesped.setTipoDocumento(dto.getTipoDocumento());
+        huesped.setPosicionIVA(dto.getPosicionIVA());
+        huesped.setFechaNacimiento(dto.getFechaNacimiento());
+        huesped.setOcupacion(dto.getOcupacion());
+        huesped.setNacionalidad(dto.getNacionalidad());
+        huesped.setEmail(dto.getEmail());
+        huesped.setCuit(dto.getCuit());
 
-    public List<ReservaDTO> obtenerReservasDeHuesped(Long idHuesped) {
-        HuespedDTO h = huespedDAO.findById(idHuesped);
-        return (h != null) ? h.getReservas() : List.of();
-    }
-
-    public List<HuespedDTO> listarHuespedes() {
-        return huespedDAO.findAll();
+        // 3) Guardar Huesped (Hibernate maneja la herencia automáticamente)
+        return huespedDAO.guardar(huesped);
     }
 }

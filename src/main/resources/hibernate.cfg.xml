@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- === Conexión a PostgreSQL === -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/javaBDD</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">123456aA</property>
+
+        <!-- === Dialecto específico de PostgreSQL === -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- === Mostrar las consultas SQL en consola === -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!--  ESTA ES LA CLAVE -->
+        <!-- "update" → crea las tablas si no existen y actualiza si cambian -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- OTRAS OPCIONES POSIBLES:
+             validate → no crea ni modifica, solo valida
+             create → crea desde cero en cada inicio (borra datos)
+             create-drop → crea y elimina al cerrar
+             none → desactiva totalmente -->
+
+        <!-- === Mapeo de entidades === -->
+        <mapping class="com.example.hotel.entity.Direccion"/>
+        <mapping class="com.example.hotel.entity.Huesped"/>
+        <mapping class="com.example.hotel.entity.Persona"/>
+
+    </session-factory>
+</hibernate-configuration>

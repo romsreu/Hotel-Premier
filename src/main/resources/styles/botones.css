@@ -1,0 +1,231 @@
+/* ============================================================
+   HOTEL PREMIER – Estilos de Botones
+   Paleta: dorado • arena • ámbar • verde • rojo
+   Tipografía: "Lucida Bright"
+   ============================================================ */
+
+/* --- BASE GENERAL (manteniendo tu diseño original) --- */
+.boton-base {
+    -fx-font-family: "Lucida Bright";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3B2B1A;
+    -fx-cursor: hand;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-padding: 10 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0.3, 0, 2);
+    -fx-transition: 0.25s;
+}
+
+/* ============================================================
+   ESTILOS ADICIONALES PRO (NUEVOS)
+   ============================================================ */
+
+/* ============================================================
+   ✅ BOTÓN CONFIRMAR / ACEPTAR
+   ============================================================ */
+.boton-confirmar {
+    -fx-background-color: linear-gradient(to bottom, #81C784, #4CAF50, #2E7D32);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255,255,255,0.3);
+    -fx-effect: dropshadow(gaussian, rgba(76,175,80,0.5), 8, 0.5, 0, 1);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 10;
+}
+/* ============================================================
+   ✨ ENFOQUE DORADO (APLICA A TODOS LOS BOTONES)
+   ============================================================ */
+.boton-base:focused,
+.boton-confirmar:focused,
+.boton-cancelar:focused,
+.boton-secundario:focused,
+.boton-ghost:focused,
+.boton-circular:focused,
+.boton-brillante:focused,
+.boton-oscuro:focused,
+.boton-icono:focused,
+.boton-accion:focused,
+.boton-animado:focused,
+.boton-nav:focused,
+.boton-alerta:focused {
+    -fx-effect: dropshadow(gaussian, rgba(255, 220, 120, 0.6), 14, 0.4, 0, 0);
+    -fx-border-color: linear-gradient(to bottom, #f7d97b, #e3b23c);
+    -fx-border-width: 2;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-translate-y: -1px;
+}
+
+.boton-confirmar:hover {
+    -fx-background-color: linear-gradient(to bottom, #A5D6A7, #66BB6A, #388E3C);
+    -fx-effect: dropshadow(gaussian, rgba(56,142,60,0.7), 10, 0.4, 0, 1);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+.boton-confirmar:pressed {
+    -fx-background-color: linear-gradient(to bottom, #66BB6A, #388E3C);
+    -fx-translate-y: 1px;
+}
+
+/* ============================================================
+   ❌ BOTÓN CANCELAR / ELIMINAR
+   ============================================================ */
+.boton-cancelar {
+    -fx-background-color: linear-gradient(to bottom, #EF5350, #E53935, #B71C1C);
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: rgba(255,255,255,0.25);
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(229,57,53,0.6), 8, 0.5, 0, 1);
+}
+.boton-cancelar:hover {
+    -fx-background-color: linear-gradient(to bottom, #FF867C, #EF5350, #C62828);
+    -fx-effect: dropshadow(gaussian, rgba(244,67,54,0.75), 10, 0.4, 0, 1);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+.boton-cancelar:pressed {
+    -fx-background-color: linear-gradient(to bottom, #E53935, #C62828);
+    -fx-translate-y: 1px;
+}
+
+/* ============================================================
+   🟢 BOTÓN SECUNDARIO (NEUTRO)
+   ============================================================ */
+.boton-secundario {
+    -fx-background-color: linear-gradient(to bottom, #ECECEC, #D0D0D0, #BDBDBD);
+    -fx-text-fill: #333333;
+    -fx-border-color: rgba(0,0,0,0.2);
+    -fx-background-radius: 10;
+}
+.boton-secundario:hover {
+    -fx-background-color: linear-gradient(to bottom, #F5F5F5, #D6D6D6, #C0C0C0);
+    -fx-text-fill: #1E1E1E;
+}
+
+/* ============================================================
+   🌫️ BOTÓN GHOST (TRANSPARENTE CON BORDE)
+   ============================================================ */
+.boton-ghost {
+    -fx-background-color: transparent;
+    -fx-border-color: #C6A567;
+    -fx-border-width: 2;
+    -fx-text-fill: #C6A567;
+}
+.boton-ghost:hover {
+    -fx-background-color: rgba(198,165,103,0.1);
+    -fx-border-color: #E8C984;
+    -fx-text-fill: #E8C984;
+    -fx-effect: dropshadow(gaussian, rgba(198,165,103,0.4), 8, 0.3, 0, 1);
+}
+
+/* ============================================================
+   🌟 BOTÓN REDONDEADO (CÍRCULO)
+   ============================================================ */
+.boton-circular {
+    -fx-background-radius: 50%;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-background-color: linear-gradient(to bottom, #FFD54F, #FFB300);
+    -fx-text-fill: #3B2B1A;
+}
+.boton-circular:hover {
+    -fx-background-color: linear-gradient(to bottom, #FFE082, #FFCA28);
+}
+
+/* ============================================================
+   ✨ BOTÓN CON BRILLO INTERNO
+   ============================================================ */
+.boton-brillante {
+    -fx-background-color: linear-gradient(to bottom, #f8d87e, #dcb66c, #b28544);
+    -fx-text-fill: #3B2B1A;
+    -fx-effect: innershadow(gaussian, rgba(255,255,255,0.6), 8, 0.3, 0, -2);
+}
+.boton-brillante:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffeaa7, #e5c070, #b6884d);
+    -fx-effect: dropshadow(gaussian, rgba(255,200,100,0.4), 12, 0.3, 0, 2);
+}
+
+/* ============================================================
+   🕶️ BOTÓN OSCURO (para modo nocturno)
+   ============================================================ */
+.boton-oscuro {
+    -fx-background-color: linear-gradient(to bottom, #3C3C3C, #1E1E1E);
+    -fx-text-fill: #E0E0E0;
+    -fx-border-color: rgba(255,255,255,0.1);
+}
+.boton-oscuro:hover {
+    -fx-background-color: linear-gradient(to bottom, #505050, #2A2A2A);
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.15), 10, 0.2, 0, 2);
+}
+
+/* ============================================================
+   🎯 BOTÓN CON ICONO IZQUIERDO
+   ============================================================ */
+.boton-icono {
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 16 8 32;
+    -fx-graphic-text-gap: 10;
+    -fx-background-color: linear-gradient(to bottom, #F6D365, #FDA085);
+}
+.boton-icono:hover {
+    -fx-background-color: linear-gradient(to bottom, #FFD27F, #FFB347);
+}
+
+/* ============================================================
+   🔄 BOTÓN DE ACCIÓN SECUNDARIA (GRIS DORADO)
+   ============================================================ */
+.boton-accion {
+    -fx-background-color: linear-gradient(to bottom, #d3c0a0, #b59767, #8b6a3a);
+    -fx-text-fill: #3B2B1A;
+}
+.boton-accion:hover {
+    -fx-background-color: linear-gradient(to bottom, #e1cfae, #c0a574, #9a7946);
+}
+
+/* ============================================================
+   🌈 BOTÓN DE GRADIENTE ANIMADO (SIMULADO)
+   ============================================================ */
+.boton-animado {
+    -fx-background-color: linear-gradient(to right, #FFD27F, #F6D365, #FDA085);
+    -fx-text-fill: #3B2B1A;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(255,180,90,0.4), 10, 0.4, 0, 2);
+}
+.boton-animado:hover {
+    -fx-background-color: linear-gradient(to right, #FDA085, #FFD27F, #F6D365);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+
+/* ============================================================
+   🧭 BOTÓN NAV (para menú principal)
+   ============================================================ */
+.boton-nav {
+    -fx-background-color: linear-gradient(to bottom, #FAE2B1, #E7BF6B, #C78E3C);
+    -fx-text-fill: #3B2B1A;
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(0,0,0,0.1);
+}
+.boton-nav:hover {
+    -fx-background-color: linear-gradient(to bottom, #FFE9B9, #EDC679, #CC9141);
+    -fx-text-fill: #2E1D0E;
+}
+
+/* ============================================================
+   ⚡ BOTÓN DE ALERTA / ADVERTENCIA (NARANJA INTENSO)
+   ============================================================ */
+.boton-alerta {
+    -fx-background-color: linear-gradient(to bottom, #FFB74D, #F57C00);
+    -fx-text-fill: #3B2B1A;
+}
+.boton-alerta:hover {
+    -fx-background-color: linear-gradient(to bottom, #FFD180, #FB8C00);
+}

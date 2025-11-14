@@ -1,0 +1,137 @@
+/* ============================================================
+   HOTEL PREMIER – Estilos de texto
+   Fuente base: "Lucida Bright"
+   Nota: No modifica tamaños definidos en FXML
+   ============================================================ */
+
+/* --- Base general para todos los textos --- */
+.texto-base {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: #3B2B1A;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 3, 0.3, 1, 1);
+}
+
+/* --- Títulos principales (ej. "DAR ALTA DE HUÉSPED") --- */
+.texto-titulo {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #F5DEB3, #B8860B);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 8, 0.5, 2, 2);
+    -fx-font-weight: bold;
+}
+
+/* --- Subtítulos o secciones --- */
+.texto-subtitulo {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: #5A4527;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0.3, 1, 1);
+}
+
+/* --- Texto resaltado o especial (por ejemplo etiquetas de éxito) --- */
+.texto-resaltado {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: #C49A3A;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.6), 6, 0.3, 0, 0);
+}
+
+/* --- Texto deshabilitado o inactivo --- */
+.texto-inactivo {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: rgba(90, 90, 90, 0.7);
+    -fx-effect: innershadow(gaussian, rgba(255,255,255,0.3), 3, 0.2, 0, 1);
+}
+
+/* ============================================================
+   ✨ ESTILOS ADICIONALES – VARIACIONES CLARAS Y DECORATIVAS
+   ============================================================ */
+
+/* --- Título claro (para fondos oscuros) --- */
+.texto-titulo-claro {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #FFFFFF, #F9EAB0);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0.5, 1, 2);
+    -fx-font-weight: bold;
+}
+
+/* --- Subtítulo claro (para contraste sobre fondos oscuros) --- */
+.texto-subtitulo-claro {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #F7F1E3, #E5C27A);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0.4, 1, 1);
+}
+
+/* --- Texto dorado suave (elegante y cálido) --- */
+.texto-dorado {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #FFF2CC, #E0B75A);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 4, 0.4, 1, 1);
+}
+
+/* --- Texto perla (ideal sobre fondos oscuros) --- */
+.texto-perla {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #FFFFFF, #E9E4D4);
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.6), 8, 0.3, 0, 0);
+}
+
+/* --- Texto marrón cálido (para secciones suaves) --- */
+.texto-marron {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #A47139, #6B3F1D);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.3, 1, 1);
+}
+
+/* --- Texto arena (para formularios o descripciones) --- */
+.texto-arena {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #F5E0B3, #D1B27C);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0.2, 1, 1);
+}
+
+/* --- Texto blanco con brillo dorado --- */
+.texto-brillante {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #FFFFFF, #FFE7AA);
+    -fx-effect: dropshadow(gaussian, rgba(255,255,200,0.7), 10, 0.5, 0, 2);
+}
+
+/* --- Texto gris elegante (para menús o labels secundarios) --- */
+.texto-gris {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: #6E6E6E;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.4), 3, 0.2, 0, 1);
+}
+
+/* --- Texto azul suave (para estados informativos) --- */
+.texto-azul {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #D0E8FF, #4A90E2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0.3, 1, 1);
+}
+
+/* --- Texto verde éxito (para mensajes positivos) --- */
+.texto-exito {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #DFFFD6, #4CAF50);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 6, 0.3, 1, 1);
+}
+
+/* --- Texto rojo alerta (para errores o advertencias) --- */
+.texto-error {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #FFD5D5, #C62828);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0.4, 1, 1);
+}
+
+/* --- Texto de información (azul grisáceo, sobrio) --- */
+.texto-info {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #E3F2FD, #90CAF9);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0.3, 1, 1);
+}
+
+/* --- Texto de advertencia (amarillo suave) --- */
+.texto-advertencia {
+    -fx-font-family: "Lucida Bright";
+    -fx-text-fill: linear-gradient(to bottom, #FFF8E1, #FFEE58);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 5, 0.3, 1, 1);
+}

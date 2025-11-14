@@ -1,22 +1,27 @@
 package ar.utn.hotel.model;
-import java.util.Date;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
-@Data
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "huesped")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+public class Huesped extends Persona {
 
-public class Huesped {
-    private int id_persona;
-    private int  nro_documento;
-    private String tipo_documento;
-    private String posicion_iva;
-    private Date fecha_nacimiento;
+    private String numeroDocumento;
+    private String tipoDocumento;
+    private String posicionIVA;
+    private String fechaNacimiento;
     private String ocupacion;
     private String nacionalidad;
     private String email;
-    private int cuit;
+    private String cuit;
 
+    // Constructor para clonar Persona
+    public Huesped(Persona p) {
+        super(p.getId(), p.getNombre(), p.getApellido(), p.getTelefono(), p.getDireccion());
+    }
 }

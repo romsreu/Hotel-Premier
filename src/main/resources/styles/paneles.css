@@ -1,0 +1,110 @@
+/* ============================================================
+   HOTEL PREMIER - ESTILOS DE PANELES
+   ============================================================ */
+
+/* === PANEL BASE NEUTRO === */
+.panel-base {
+    -fx-background-color: linear-gradient(to bottom right, #f5f7fa, #e4ebf1);
+}
+
+/* === PANEL AZUL ACERO (para fondos o encabezados) === */
+.panel-azul-acero {
+    -fx-background-color: linear-gradient(to bottom, #3A506B, #2E3F55);
+}
+
+/* === PANEL AZUL PETRÓLEO (profesional oscuro) === */
+.panel-azul-petroleo {
+    -fx-background-color: linear-gradient(to bottom right, #1F2D3A, #2C3E50);
+}
+
+/* === PANEL GRIS CLARO (neutro para formularios) === */
+.panel-gris-claro {
+    -fx-background-color: linear-gradient(to bottom right, #E5E7EA, #DDE1E4);
+}
+
+/* === PANEL GRIS HUMO (tono intermedio) === */
+.panel-gris-humo {
+    -fx-background-color: linear-gradient(to bottom, #BFC5CA, #E2E5E7);
+}
+
+/* === PANEL DORADO (para resaltar secciones de perfil o tarjetas) === */
+.panel-dorado {
+    -fx-background-color: linear-gradient(to bottom right, #F6D365, #FDA085);
+}
+
+/* === PANEL VERDE AGUA (para estados exitosos o cuadros de resumen) === */
+.panel-verde-agua {
+    -fx-background-color: linear-gradient(to bottom right, #5BC0BE, #9AD4D6);
+}
+
+/* === PANEL AZUL ATLÁNTICO (para áreas interactivas o info destacada) === */
+.panel-azul-atlantico {
+    -fx-background-color: linear-gradient(to bottom right, #1D3557, #457B9D);
+}
+
+/* === PANEL VIOLETA NOCHE (para modales o overlays) === */
+.panel-violeta-noche {
+    -fx-background-color: linear-gradient(to bottom right, #3E1F47, #612E76);
+}
+
+/* === PANEL COBRE SUAVE (para fondos cálidos y elegantes) === */
+.panel-cobre {
+    -fx-background-color: linear-gradient(to bottom right, #D1913C, #FFD194);
+}
+
+/* === PANEL AZUL CIELO (para cabeceras limpias o formularios) === */
+.panel-azul-cielo {
+    -fx-background-color: linear-gradient(to bottom right, #74ABE2, #5563DE);
+}
+
+/* === PANEL ELEGANTE NEGRO SUAVE (para menús o secciones laterales) === */
+.panel-negro-suave {
+    -fx-background-color: linear-gradient(to bottom, #2E2E2E, #1C1C1C);
+}
+
+/* === PANEL BLANCO CON SOMBRA SUAVE (para tarjetas o contenedores) === */
+.panel-blanco {
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0.3, 0, 2);
+}
+
+/* === PANEL DE GRADIENTE HORIZONTAL MODERNO === */
+.panel-horizontal-moderno {
+    -fx-background-color: linear-gradient(to right, #2C3E50, #4CA1AF);
+}
+
+/* === PANEL CON DEGRADADO SUTIL CLARO === */
+.panel-sutil {
+    -fx-background-color: linear-gradient(to bottom right, #F8FBFD, #EAEFF2);
+}
+
+/* === PANEL ROJO ELEGANTE (para advertencias o errores) === */
+.panel-rojo {
+    -fx-background-color: linear-gradient(to bottom right, #D31027, #EA384D);
+}
+
+/* === PANEL VERDE SUAVE (para estados de éxito o mensajes positivos) === */
+.panel-verde {
+    -fx-background-color: linear-gradient(to bottom right, #56ab2f, #a8e063);
+}
+
+/* === PANEL AZUL NOCHE CLÁSICO (header de login o dashboard) === */
+.panel-azul-noche {
+    -fx-background-color: linear-gradient(to bottom right, #141E30, #243B55);
+}
+
+/* === PANEL PIEL NEUTRO (para estética cálida y sobria) === */
+.panel-piel {
+    -fx-background-color: linear-gradient(to bottom right, #FFECD2, #FCB69F);
+}
+
+/* === PANEL MORADO SUAVE (para detalles de interfaz moderna) === */
+.panel-morado-suave {
+    -fx-background-color: linear-gradient(to bottom right, #8360c3, #2ebf91);
+}
+
+/* === PANEL SOMBRA GRIS (ideal para contrastar contenido) === */
+.panel-sombra {
+    -fx-background-color: linear-gradient(to bottom, #E8EAEC, #BDC3C7);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0.2, 0, 2);
+}

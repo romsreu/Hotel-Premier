@@ -1,0 +1,123 @@
+/* ======================================================
+   🎨 FONDOS PROFESIONALES - HOTEL PREMIER
+   ====================================================== */
+
+/* Dorado cálido */
+.fondo-dorado {
+    -fx-background-color: linear-gradient(to bottom right, #f5e6c4, #d4b46a, #b98b3b);
+}
+
+/* Beige elegante */
+.fondo-beige {
+    -fx-background-color: linear-gradient(to bottom right, #f3e9d2, #d8c29d, #b99b74);
+}
+
+/* Azul profesional */
+.fondo-azul {
+    -fx-background-color: linear-gradient(to bottom right, #b6d0ff, #6f9ad9, #345b9a);
+}
+
+/* Azul oscuro elegante */
+.fondo-azul-oscuro {
+    -fx-background-color: linear-gradient(to bottom right, #4b6cb7, #182848);
+}
+
+/* Verde esmeralda */
+.fondo-verde {
+    -fx-background-color: linear-gradient(to bottom right, #a8e063, #56ab2f);
+}
+
+/* Verde menta */
+.fondo-verde-menta {
+    -fx-background-color: linear-gradient(to bottom right, #d4fc79, #96e6a1);
+}
+
+/* Rojo atardecer */
+.fondo-rojo {
+    -fx-background-color: linear-gradient(to bottom right, #f093fb, #f5576c);
+}
+
+/* Violeta imperial */
+.fondo-violeta {
+    -fx-background-color: linear-gradient(to bottom right, #7f7fd5, #86a8e7, #91eae4);
+}
+
+/* Vino intenso */
+.fondo-vino {
+    -fx-background-color: linear-gradient(to bottom right, #3a1c71, #d76d77, #ffaf7b);
+}
+
+/* Gris moderno */
+.fondo-gris {
+    -fx-background-color: linear-gradient(to bottom right, #d7d2cc, #304352);
+}
+
+/* Negro con reflejo */
+.fondo-negro {
+    -fx-background-color: linear-gradient(to bottom right, #434343, #000000);
+}
+
+/* Arena suave */
+.fondo-arena {
+    -fx-background-color: linear-gradient(to bottom right, #f1e0c6, #d8b58a, #b58b61);
+}
+
+/* Dorado real */
+.fondo-dorado-real {
+    -fx-background-color: linear-gradient(to bottom right, #fbd786, #f7797d);
+}
+
+/* Cobre */
+.fondo-cobre {
+    -fx-background-color: linear-gradient(to bottom right, #d1913c, #ffd194);
+}
+
+/* Plata moderna */
+.fondo-plata {
+    -fx-background-color: linear-gradient(to bottom right, #e0e0e0, #c9c9c9, #9e9e9e);
+}
+
+/* Azul petróleo */
+.fondo-petroleo {
+    -fx-background-color: linear-gradient(to bottom right, #2c3e50, #4ca1af);
+}
+
+/* Verde bosque */
+.fondo-bosque {
+    -fx-background-color: linear-gradient(to bottom right, #5a3f37, #2c7744);
+}
+
+/* Azul pastel */
+.fondo-azul-pastel {
+    -fx-background-color: linear-gradient(to bottom right, #a1c4fd, #c2e9fb);
+}
+
+/* Lila suave */
+.fondo-lila {
+    -fx-background-color: linear-gradient(to bottom right, #e0c3fc, #8ec5fc);
+}
+
+/* Rosado elegante */
+.fondo-rosado {
+    -fx-background-color: linear-gradient(to bottom right, #fbc2eb, #a6c1ee);
+}
+
+/* Azul noche */
+.fondo-noche {
+    -fx-background-color: linear-gradient(to bottom right, #141e30, #243b55);
+}
+
+/* Dorado oscuro */
+.fondo-dorado-oscuro {
+    -fx-background-color: linear-gradient(to bottom right, #c79081, #dfa579, #ffdbb5);
+}
+
+/* Blanco perla */
+.fondo-perla {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #ece9e6);
+}
+
+/* Marrón cálido */
+.fondo-marron {
+    -fx-background-color: linear-gradient(to bottom right, #603813, #b29f94);
+}
