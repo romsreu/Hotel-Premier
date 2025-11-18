@@ -20,6 +20,7 @@ public class EstadoHabitacionesController2 {
 
     // Referencias a los GridPanes de cada tab
     private GridPane gridTodasHabitaciones;
+    private GridPane gridIndividualEstandar;
     private GridPane gridDobleEstandar;
     private GridPane gridDobleSuperior;
     private GridPane gridSuperiorFamily;
@@ -27,6 +28,7 @@ public class EstadoHabitacionesController2 {
 
     // Referencias a los ScrollPanes
     private ScrollPane scrollTodasHabitaciones;
+    private ScrollPane scrollIndividualEstandar;
     private ScrollPane scrollDobleEstandar;
     private ScrollPane scrollDobleSuperior;
     private ScrollPane scrollSuperiorFamily;
@@ -49,7 +51,7 @@ public class EstadoHabitacionesController2 {
         fechaInicio = LocalDate.of(2024, 11, 1);
         fechaFin = LocalDate.of(2024, 11, 30); // 30 días
 
-        cantidadHabitacionesPorTipo = new HashMap<>();
+        cantidadHabitacionesPorTipo = new LinkedHashMap<>(); // LinkedHashMap para mantener orden
         cantidadHabitacionesPorTipo.put("Individual Estándar", 10);
         cantidadHabitacionesPorTipo.put("Doble Estándar", 18);
         cantidadHabitacionesPorTipo.put("Doble Superior", 8);
@@ -63,16 +65,22 @@ public class EstadoHabitacionesController2 {
     private void inicializarTabs() {
         // Obtener los tabs
         Tab tabTodas = tabPane.getTabs().get(0);
-        Tab tabDobleEstandar = tabPane.getTabs().get(1);
-        Tab tabDobleSuperior = tabPane.getTabs().get(2);
-        Tab tabSuperiorFamily = tabPane.getTabs().get(3);
-        Tab tabSuiteDoble = tabPane.getTabs().get(4);
+        Tab tabIndividualEstandar = tabPane.getTabs().get(1);
+        Tab tabDobleEstandar = tabPane.getTabs().get(2);
+        Tab tabDobleSuperior = tabPane.getTabs().get(3);
+        Tab tabSuperiorFamily = tabPane.getTabs().get(4);
+        Tab tabSuiteDoble = tabPane.getTabs().get(5);
 
         // Crear ScrollPanes y GridPanes para cada tab
         scrollTodasHabitaciones = crearScrollPane();
         gridTodasHabitaciones = crearGridPane();
         scrollTodasHabitaciones.setContent(gridTodasHabitaciones);
         tabTodas.setContent(scrollTodasHabitaciones);
+
+        scrollIndividualEstandar = crearScrollPane();
+        gridIndividualEstandar = crearGridPane();
+        scrollIndividualEstandar.setContent(gridIndividualEstandar);
+        tabIndividualEstandar.setContent(scrollIndividualEstandar);
 
         scrollDobleEstandar = crearScrollPane();
         gridDobleEstandar = crearGridPane();
@@ -168,6 +176,7 @@ public class EstadoHabitacionesController2 {
         cargarGrilla(gridTodasHabitaciones, fechaInicio, fechaFin, todasHabitaciones);
 
         // Cargar cada tab específico
+        cargarGrillaPorTipo(gridIndividualEstandar, fechaInicio, fechaFin, "Individual Estándar", 10);
         cargarGrillaPorTipo(gridDobleEstandar, fechaInicio, fechaFin, "Doble Estándar", 18);
         cargarGrillaPorTipo(gridDobleSuperior, fechaInicio, fechaFin, "Doble Superior", 8);
         cargarGrillaPorTipo(gridSuperiorFamily, fechaInicio, fechaFin, "Superior Family Plan", 10);

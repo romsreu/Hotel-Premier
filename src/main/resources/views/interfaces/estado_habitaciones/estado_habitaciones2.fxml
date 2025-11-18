@@ -54,6 +54,9 @@
                 <Tab closable="false" text="Todas las Habitaciones">
                     <!-- El contenido se crea dinámicamente en el controller -->
                 </Tab>
+                <Tab closable="false" text="Individual Estándar">
+                    <!-- El contenido se crea dinámicamente en el controller -->
+                </Tab>
                 <Tab closable="false" text="Doble Estándar">
                     <!-- El contenido se crea dinámicamente en el controller -->
                 </Tab>
