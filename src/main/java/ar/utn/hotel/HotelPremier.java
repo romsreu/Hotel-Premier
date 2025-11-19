@@ -13,13 +13,9 @@ public class HotelPremier extends Application {
     @Override
     public void start(Stage stage) {
         GeorefLoader.cargarTodo();
-        SceneManager.precargarEscena("menu", "/views/interfaces/menu-principal.fxml");
-        SceneManager.precargarEscena("alta_huesped", "/views/interfaces/dar-alta-huesped.fxml");
-        SceneManager.precargarEscena("estado_habs2", "/views/interfaces/estado-habitaciones/estado-habitaciones-2.fxml");
-        SceneManager.precargarEscena("buscar_huesped2", "/views/interfaces/buscar-huesped/buscar-huesped-2.fxml");
+        precargarEscenas();
 
-        // Crear ÚNICA Scene
-        mainScene = new Scene(SceneManager.getRoot("buscar_huesped2"));
+        mainScene = new Scene(SceneManager.getRoot("menu"));
 
         stage.setTitle("Hotel Premier");
         stage.setScene(mainScene);
@@ -28,12 +24,17 @@ public class HotelPremier extends Application {
         stage.show();
     }
 
-    public static void cambiarA(String nombreEscena) {
-        mainScene.setRoot(SceneManager.getRoot(nombreEscena));
+    private void precargarEscenas (){
+        SceneManager.precargarEscena("menu", "/views/interfaces/menu-principal.fxml");
+        SceneManager.precargarEscena("alta_huesped", "/views/interfaces/dar-alta-huesped.fxml");
+        SceneManager.precargarEscena ("estado_habs1", "/views/interfaces/estado-habitaciones/estado-habitaciones-1.fxml");
+        SceneManager.precargarEscena("estado_habs2", "/views/interfaces/estado-habitaciones/estado-habitaciones-2.fxml");
+        SceneManager.precargarEscena("buscar_huesped1", "/views/interfaces/buscar-huesped/buscar-huesped-1.fxml");
+        SceneManager.precargarEscena("buscar_huesped2", "/views/interfaces/buscar-huesped/buscar-huesped-2.fxml");
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static void cambiarA(String nombreEscena) {
+        mainScene.setRoot(SceneManager.getRoot(nombreEscena));
     }
 }
 

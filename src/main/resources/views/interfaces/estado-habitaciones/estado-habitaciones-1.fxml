@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="950.0" styleClass="panel-azul-noche" stylesheets="@../../../styles/paneles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.buscar_huesped.BuscarHuesped1Controller">
+<AnchorPane prefHeight="600.0" prefWidth="950.0" styleClass="panel-azul-noche" stylesheets="@../../../styles/paneles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BuscarHuesped.BuscarHuespedController1">
     <children>
         <StackPane layoutY="40.0" prefHeight="75.0" prefWidth="950.0" styleClass="panel-negro-suave" stylesheets="@../../../styles/paneles.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
@@ -83,7 +83,7 @@
         </StackPane>
         <HBox alignment="CENTER" layoutX="4.0" layoutY="500.0" prefHeight="100.0" prefWidth="950.0" spacing="70.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Button fx:id="btnCancelar" mnemonicParsing="false" prefHeight="54.0" prefWidth="185.0" styleClass="boton-cancelar" stylesheets="@../../../styles/botones.css" text="CANCELAR">
+                <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#onCancelarClicked" prefHeight="54.0" prefWidth="185.0" styleClass="boton-cancelar" stylesheets="@../../../styles/botones.css" text="CANCELAR">
                     <font>
                         <Font name="Lucida Bright Demibold" size="19.0" />
                     </font>

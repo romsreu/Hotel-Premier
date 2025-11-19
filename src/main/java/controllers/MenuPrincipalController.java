@@ -16,7 +16,9 @@ public class MenuPrincipalController {
     }
 
     @FXML
-    private void onMostrarEstadoHabs(ActionEvent event){
-        HotelPremier.cambiarA("estado_habs");
+    private void on_mostrar_estado_habs_pressed(ActionEvent event){
+        HotelPremier.cambiarA("estado_habs1");
     }
+
+
 }
