@@ -7,8 +7,9 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Tarjeta_Debito {
-    private int id_medio_pago;
-    private String marca;
+public class TarjetaCredito {
+    private int id_tarjeta;
+    private String Marca;
     private String banco_emisor;
+
 }

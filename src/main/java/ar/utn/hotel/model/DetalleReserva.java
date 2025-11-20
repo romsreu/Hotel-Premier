@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class detalle_reserva {
+public class DetalleReserva {
     private int id_detalle_reserva;
     private Date fecha_inicio;
     private Date fecha_fin;

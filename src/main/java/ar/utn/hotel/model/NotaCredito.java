@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Nota_Credito {
+public class NotaCredito {
     private int id_nota_credito;
     private int numero;
     private Date fecha;

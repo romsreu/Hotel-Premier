@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Tipo_Habitacion {
+public class TipoHabitacion {
     private int idTipoHabitacion;
     private String nombre;
     private String descripcion;

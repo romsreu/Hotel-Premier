@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Responsable_Pago {
+public class ResponsablePago {
     private int idResponsablePago;
     private String razonSocial;
     private int cuit;

@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Estado_Habitacion {
+public class EstadoHabitacion {
     private int idEstado;
     private Date fechaDesde;
     private Date fechaHasta;

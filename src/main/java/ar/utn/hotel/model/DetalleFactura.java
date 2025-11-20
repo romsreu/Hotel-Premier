@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Detalle_Factura {
+public class DetalleFactura {
     private int id_detalle;
     private String concepto;
     private int cantidad;
