@@ -1,9 +1,12 @@
 package controllers.BuscarHuesped;
 
+import ar.utn.hotel.HotelPremier;
+import ar.utn.hotel.model.Huesped;
+import controllers.PopUpController;
+import enums.PopUpType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -11,49 +14,45 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import utils.DataTransfer;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.List;
 
-public class BuscarHuespedController2 implements Initializable {
+public class BuscarHuespedController2 {
 
-    @FXML
-    private VBox containerHuespedes;
-
-    @FXML
-    private Button btnCancelar;
-
-    @FXML
-    private Button btnSiguiente;
+    @FXML private VBox containerHuespedes;
+    @FXML private Button btnCancelar;
+    @FXML private Button btnSiguiente;
 
     private Huesped huespedSeleccionado;
     private ObservableList<Huesped> listaHuespedes;
     private GridPane filaSeleccionada;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        cargarDatosPrueba();
+    public void initialize() {
+        cargarHuespedesDesdeTransfer();
         mostrarHuespedes();
         configurarBotones();
     }
 
-    private void cargarDatosPrueba() {
-        listaHuespedes = FXCollections.observableArrayList();
+    private void cargarHuespedesDesdeTransfer() {
+        List<Huesped> huespedes = DataTransfer.getHuespedesEnBusqueda();
 
-        // Datos de prueba - reemplazar con datos de BD
-        listaHuespedes.add(new Huesped("Juan", "Pérez", "DNI", "12345678", "juan.perez@email.com"));
-        listaHuespedes.add(new Huesped("María", "García", "DNI", "87654321", "maria.garcia@email.com"));
-        listaHuespedes.add(new Huesped("Carlos", "López", "Pasaporte", "AB123456", "carlos.lopez@email.com"));
-        listaHuespedes.add(new Huesped("Ana", "Martínez", "DNI", "45678901", "ana.martinez@email.com"));
-        listaHuespedes.add(new Huesped("Roberto", "Sánchez", "Cédula", "1234567890", "roberto.sanchez@email.com"));
-        listaHuespedes.add(new Huesped("Laura", "Rodríguez", "DNI", "56789012", "laura.rodriguez@email.com"));
-        listaHuespedes.add(new Huesped("Diego", "Fernández", "Pasaporte", "CD789012", "diego.fernandez@email.com"));
-        listaHuespedes.add(new Huesped("Sofía", "Moreno", "DNI", "67890123", "sofia.moreno@email.com"));
-        listaHuespedes.add(new Huesped("Pedro", "Jiménez", "DNI", "78901234", "pedro.jimenez@email.com"));
-        listaHuespedes.add(new Huesped("Elena", "Ortiz", "Pasaporte", "EF345678", "elena.ortiz@email.com"));
+        if (huespedes != null) {
+            listaHuespedes = FXCollections.observableArrayList(huespedes);
+        } else {
+            listaHuespedes = FXCollections.observableArrayList();
+        }
     }
 
     private void mostrarHuespedes() {
+        if (listaHuespedes == null || listaHuespedes.isEmpty()) {
+            Label lblVacio = new Label("No se encontraron huéspedes");
+            lblVacio.setStyle("-fx-text-fill: #999999; -fx-font-size: 14;");
+            lblVacio.setPadding(new Insets(20, 10, 10, 10));
+            containerHuespedes.getChildren().add(lblVacio);
+            return;
+        }
+
         for (Huesped huesped : listaHuespedes) {
             GridPane filaHuesped = crearFilaHuesped(huesped);
             containerHuespedes.getChildren().add(filaHuesped);
@@ -66,19 +65,50 @@ public class BuscarHuespedController2 implements Initializable {
         gridRow.setMinHeight(50.0);
         gridRow.setMaxHeight(50.0);
 
-        // Configurar las mismas columnas que el header
-        gridRow.getColumnConstraints().addAll(
-                crearColumnConstraint(150.0),
-                crearColumnConstraint(150.0),
-                crearColumnConstraint(150.0),
-                crearColumnConstraint(150.0),
-                crearColumnConstraint(250.0)
-        );
+        // NO establecer ancho fijo - dejar que se expanda como el header
+        // gridRow.setPrefWidth(850.0);
 
-        // Estilo inicial de la fila
+        // IMPORTANTE: Sin gaps ni padding
+        gridRow.setHgap(0);
+        gridRow.setVgap(0);
+
+        // Configurar exactamente igual que el FXML
+        javafx.scene.layout.ColumnConstraints col1 = new javafx.scene.layout.ColumnConstraints();
+        col1.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
+        col1.setMinWidth(100.0);
+        col1.setPrefWidth(150.0);
+
+        javafx.scene.layout.ColumnConstraints col2 = new javafx.scene.layout.ColumnConstraints();
+        col2.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
+        col2.setMinWidth(100.0);
+        col2.setPrefWidth(150.0);
+
+        javafx.scene.layout.ColumnConstraints col3 = new javafx.scene.layout.ColumnConstraints();
+        col3.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
+        col3.setMinWidth(100.0);
+        col3.setPrefWidth(150.0);
+
+        javafx.scene.layout.ColumnConstraints col4 = new javafx.scene.layout.ColumnConstraints();
+        col4.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
+        col4.setMinWidth(100.0);
+        col4.setPrefWidth(150.0);
+
+        javafx.scene.layout.ColumnConstraints col5 = new javafx.scene.layout.ColumnConstraints();
+        col5.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
+        col5.setMinWidth(100.0);
+        col5.setPrefWidth(250.0);
+
+        gridRow.getColumnConstraints().addAll(col1, col2, col3, col4, col5);
+
+        // Row constraint
+        javafx.scene.layout.RowConstraints row = new javafx.scene.layout.RowConstraints();
+        row.setMinHeight(50.0);
+        row.setPrefHeight(50.0);
+        row.setVgrow(javafx.scene.layout.Priority.SOMETIMES);
+        gridRow.getRowConstraints().add(row);
+
         gridRow.setStyle("-fx-background-color: #fdfaf2; -fx-border-color: #e8dcc4; -fx-border-width: 0 0 1 0;");
 
-        // Crear y agregar labels
         Label lblNombre = crearLabel(huesped.getNombre(), 0);
         Label lblApellido = crearLabel(huesped.getApellido(), 1);
         Label lblTipoDoc = crearLabel(huesped.getTipoDocumento(), 2);
@@ -87,10 +117,8 @@ public class BuscarHuespedController2 implements Initializable {
 
         gridRow.getChildren().addAll(lblNombre, lblApellido, lblTipoDoc, lblNumDoc, lblEmail);
 
-        // Manejo de selección
         gridRow.setOnMouseClicked(e -> seleccionarFila(gridRow, huesped));
 
-        // Efecto hover
         gridRow.setOnMouseEntered(e -> {
             if (filaSeleccionada != gridRow) {
                 gridRow.setStyle("-fx-background-color: #f5ecd4; -fx-border-color: #e0cfa8; -fx-border-width: 0 0 1 0;");
@@ -108,16 +136,7 @@ public class BuscarHuespedController2 implements Initializable {
         return gridRow;
     }
 
-    private javafx.scene.layout.ColumnConstraints crearColumnConstraint(double prefWidth) {
-        javafx.scene.layout.ColumnConstraints col = new javafx.scene.layout.ColumnConstraints();
-        col.setPrefWidth(prefWidth);
-        col.setMinWidth(prefWidth);
-        col.setMaxWidth(prefWidth);
-        return col;
-    }
-
     private void seleccionarFila(GridPane fila, Huesped huesped) {
-        // Deseleccionar la fila anterior
         if (filaSeleccionada != null) {
             filaSeleccionada.setStyle("-fx-background-color: #fdfaf2; -fx-border-color: #e8dcc4; -fx-border-width: 0 0 1 0;");
             filaSeleccionada.getChildren().forEach(node -> {
@@ -127,7 +146,6 @@ public class BuscarHuespedController2 implements Initializable {
             });
         }
 
-        // Seleccionar la nueva fila
         filaSeleccionada = fila;
         huespedSeleccionado = huesped;
 
@@ -137,128 +155,43 @@ public class BuscarHuespedController2 implements Initializable {
                 ((Label) node).setStyle("-fx-text-fill: #2E1D0E; -fx-font-weight: bold;");
             }
         });
-
-        System.out.println("Huésped seleccionado: " + huesped.getNombre() + " " + huesped.getApellido());
     }
 
     private Label crearLabel(String texto, int columnIndex) {
-        Label label = new Label(texto);
+        Label label = new Label(texto != null ? texto : "");
         label.setFont(Font.font("Lucida Bright", 14.0));
         label.setStyle("-fx-text-fill: #2E1D0E;");
-        label.setPadding(new Insets(10, 10, 10, 10));
-        label.setMaxWidth(Double.MAX_VALUE);
-        label.setMinWidth(100.0);
 
+        // Configurar la posición en el grid
         GridPane.setColumnIndex(label, columnIndex);
+        GridPane.setRowIndex(label, 0);
+
+        // Usar el mismo margen que el header: solo left 10.0
+        GridPane.setMargin(label, new Insets(0, 0, 0, 10.0));
 
         return label;
     }
 
     private void configurarBotones() {
-        btnCancelar.setOnAction(e -> {
-            System.out.println("Cancelar presionado");
-            // Lógica para cancelar
-            limpiarSeleccion();
-        });
-
-        btnSiguiente.setOnAction(e -> {
-            if (huespedSeleccionado != null) {
-                System.out.println("Siguiente presionado con huésped: " +
-                        huespedSeleccionado.getNombre() + " " +
-                        huespedSeleccionado.getApellido());
-                // Lógica para continuar al siguiente paso
-            } else {
-                System.out.println("No hay huésped seleccionado");
-                // Mostrar mensaje de error o advertencia
-            }
-        });
+        btnCancelar.setOnAction(e -> onCancelarClicked());
+        btnSiguiente.setOnAction(e -> onSiguienteClicked());
     }
 
-    private void limpiarSeleccion() {
-        if (filaSeleccionada != null) {
-            filaSeleccionada.setStyle("-fx-background-color: #fdfaf2; -fx-border-color: #e8dcc4; -fx-border-width: 0 0 1 0;");
-            filaSeleccionada.getChildren().forEach(node -> {
-                if (node instanceof Label) {
-                    ((Label) node).setStyle("-fx-text-fill: #2E1D0E;");
-                }
-            });
-            filaSeleccionada = null;
-        }
-        huespedSeleccionado = null;
+    @FXML
+    private void onCancelarClicked() {
+        HotelPremier.cambiarA("buscar_huesped1");
     }
 
-    // Métodos públicos para acceder al huésped seleccionado
-    public Huesped getHuespedSeleccionado() {
-        return huespedSeleccionado;
-    }
-
-    public boolean hayHuespedSeleccionado() {
-        return huespedSeleccionado != null;
-    }
-
-    // Método para cargar huéspedes desde BD
-    public void cargarHuespedesDesdeDB(ObservableList<Huesped> huespedes) {
-        listaHuespedes = huespedes;
-        containerHuespedes.getChildren().clear();
-        containerHuespedes.getChildren().add(containerHuespedes.getChildren().get(0)); // Mantener el header
-        mostrarHuespedes();
-    }
-
-    // ===== CLASE INTERNA HUESPED =====
-    // Esta clase debería ser reemplazada por tu entidad real de BD
-    public static class Huesped {
-        private String nombre;
-        private String apellido;
-        private String tipoDocumento;
-        private String numeroDocumento;
-        private String email;
-
-        public Huesped(String nombre, String apellido, String tipoDocumento, String numeroDocumento, String email) {
-            this.nombre = nombre;
-            this.apellido = apellido;
-            this.tipoDocumento = tipoDocumento;
-            this.numeroDocumento = numeroDocumento;
-            this.email = email;
-        }
-
-        public String getNombre() {
-            return nombre;
-        }
-
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
-        }
-
-        public String getApellido() {
-            return apellido;
-        }
-
-        public void setApellido(String apellido) {
-            this.apellido = apellido;
-        }
-
-        public String getTipoDocumento() {
-            return tipoDocumento;
-        }
-
-        public void setTipoDocumento(String tipoDocumento) {
-            this.tipoDocumento = tipoDocumento;
-        }
-
-        public String getNumeroDocumento() {
-            return numeroDocumento;
-        }
-
-        public void setNumeroDocumento(String numeroDocumento) {
-            this.numeroDocumento = numeroDocumento;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
+    @FXML
+    private void onSiguienteClicked() {
+        if (huespedSeleccionado != null) {
+            // DataTransfer.setHuespedSeleccionado(huespedSeleccionado);
+            // HotelPremier.cambiarA("proxima_pantalla");
+        } else {
+            PopUpController.mostrarPopUp(
+                    PopUpType.WARNING,
+                    "Por favor, seleccione un huésped para continuar"
+            );
         }
     }
 }
