@@ -3,7 +3,7 @@ package ar.utn.hotel.dao.impl;
 import ar.utn.hotel.dao.HuespedDAO;
 import ar.utn.hotel.dto.BuscarHuespedDTO;
 import ar.utn.hotel.model.Huesped;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

@@ -32,7 +32,7 @@ public class  HotelPremier extends Application {
     @Override
     public void start(Stage stage) {
 
-        probarMetodos();
+        //probarMetodos();
 
         GeorefLoader.cargarTodo();
         precargarEscenas();

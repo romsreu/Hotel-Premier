@@ -255,54 +255,64 @@
     -fx-background-color: transparent;
 }
 
-/* Barra de scroll vertical */
+/* Barra de scroll vertical - MÁS ANCHA Y VISIBLE */
 .scroll-pane .scroll-bar:vertical {
     -fx-background-color: transparent;
-    -fx-padding: 2;
+    -fx-padding: 4;
+    -fx-pref-width: 16px; /* Ancho de la barra completa */
 }
 
 .scroll-pane .scroll-bar:vertical .track {
     -fx-background-color: linear-gradient(to right, #e8dcc4, #ded2b8);
-    -fx-background-radius: 6;
-    -fx-border-color: rgba(0,0,0,0.1);
-    -fx-border-radius: 6;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-min-width: 12px; /* Ancho mínimo del track */
 }
 
 .scroll-pane .scroll-bar:vertical .thumb {
     -fx-background-color: linear-gradient(to right, #c9ad7a, #e7c375);
-    -fx-background-radius: 5;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0.3, 0, 1);
+    -fx-background-radius: 7;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0.4, 0, 1);
+    -fx-min-width: 12px; /* Ancho mínimo del thumb */
 }
 
 .scroll-pane .scroll-bar:vertical .thumb:hover {
     -fx-background-color: linear-gradient(to right, #d5b786, #edc982);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 5, 0.5, 0, 1);
 }
 
 .scroll-pane .scroll-bar:vertical .thumb:pressed {
     -fx-background-color: linear-gradient(to right, #b39564, #d5b168);
 }
 
-/* Barra de scroll horizontal */
+/* Barra de scroll horizontal - MÁS ANCHA Y VISIBLE */
 .scroll-pane .scroll-bar:horizontal {
     -fx-background-color: transparent;
-    -fx-padding: 2;
+    -fx-padding: 4;
+    -fx-pref-height: 16px; /* Alto de la barra completa */
 }
 
 .scroll-pane .scroll-bar:horizontal .track {
     -fx-background-color: linear-gradient(to bottom, #e8dcc4, #ded2b8);
-    -fx-background-radius: 6;
-    -fx-border-color: rgba(0,0,0,0.1);
-    -fx-border-radius: 6;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-min-height: 12px; /* Alto mínimo del track */
 }
 
 .scroll-pane .scroll-bar:horizontal .thumb {
     -fx-background-color: linear-gradient(to bottom, #c9ad7a, #e7c375);
-    -fx-background-radius: 5;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0.3, 0, 1);
+    -fx-background-radius: 7;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0.4, 0, 1);
+    -fx-min-height: 12px; /* Alto mínimo del thumb */
 }
 
 .scroll-pane .scroll-bar:horizontal .thumb:hover {
     -fx-background-color: linear-gradient(to bottom, #d5b786, #edc982);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 5, 0.5, 0, 1);
 }
 
 .scroll-pane .scroll-bar:horizontal .thumb:pressed {

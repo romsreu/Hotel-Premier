@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import utils.DataTransfer;
 
-import static ar.utn.hotel.utils.TextManager.aplicarMayusculas;
 import static utils.TextManager.*;
 
 import java.util.List;

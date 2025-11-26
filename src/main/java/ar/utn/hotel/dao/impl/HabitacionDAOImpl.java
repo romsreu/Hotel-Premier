@@ -3,7 +3,7 @@ package ar.utn.hotel.dao.impl;
 import ar.utn.hotel.dao.HabitacionDAO;
 import enums.EstadoHabitacion;
 import ar.utn.hotel.model.Habitacion;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 import enums.TipoHabitacion;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

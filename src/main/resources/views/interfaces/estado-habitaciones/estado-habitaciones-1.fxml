@@ -67,7 +67,7 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Button>
-                <Button fx:id="btnMostrar" mnemonicParsing="false" prefHeight="54.0" prefWidth="192.0" styleClass="boton-confirmar" stylesheets="@../../../styles/botones.css" text="MOSTRAR" textFill="#e1ffcc">
+                <Button fx:id="btnMostrar" mnemonicParsing="false" onAction="#onMostrarClicked" prefHeight="54.0" prefWidth="192.0" styleClass="boton-confirmar" stylesheets="@../../../styles/botones.css" text="MOSTRAR" textFill="#e1ffcc">
                     <font>
                         <Font name="Lucida Bright Demibold" size="19.0" />
                     </font>

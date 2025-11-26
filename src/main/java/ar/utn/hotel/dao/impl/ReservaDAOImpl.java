@@ -6,7 +6,7 @@ import ar.utn.hotel.dao.ReservaDAO;
 import ar.utn.hotel.model.Habitacion;
 import ar.utn.hotel.model.Persona;
 import ar.utn.hotel.model.Reserva;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;

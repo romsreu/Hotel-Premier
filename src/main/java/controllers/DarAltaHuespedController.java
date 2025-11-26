@@ -2,7 +2,6 @@ package controllers;
 
 import ar.utn.hotel.HotelPremier;
 import ar.utn.hotel.dto.DarAltaHuespedDTO;
-import ar.utn.hotel.dto.HuespedDTO;
 import ar.utn.hotel.gestor.GestorHuesped;
 import enums.PopUpType;
 import enums.TipoDocumento;
@@ -11,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 
-import static ar.utn.hotel.utils.TextManager.aplicarMascaraTelefono;
 import static utils.TextManager.*;
 
 import utils.GeorefCache;

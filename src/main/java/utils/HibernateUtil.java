@@ -1,4 +1,4 @@
-package ar.utn.hotel.utils;
+package utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

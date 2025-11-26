@@ -1,15 +1,23 @@
 package controllers.EstadoHabitaciones;
 
+import ar.utn.hotel.HotelPremier;
+import ar.utn.hotel.dao.impl.HabitacionDAOImpl;
+import ar.utn.hotel.model.Habitacion;
+import enums.ContextoEstadoHabitaciones;
+import enums.EstadoHabitacion;
+import enums.TipoHabitacion;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.Cursor;
+import utils.DataTransfer;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EstadoHabitacionesController2 {
 
@@ -17,6 +25,7 @@ public class EstadoHabitacionesController2 {
     @FXML private Button btnVolver;
     @FXML private Button btnConfirmar;
     @FXML private TabPane tabPane;
+    @FXML private Label lblTitulo; // Opcional
 
     // Referencias a los GridPanes de cada tab
     private GridPane gridTodasHabitaciones;
@@ -40,26 +49,65 @@ public class EstadoHabitacionesController2 {
     private static final int COLUMNAS_VISIBLES = 6;
     private static final int FILAS_VISIBLES = 6;
 
-    // Datos de prueba
+    // DAO y datos
+    private HabitacionDAOImpl habitacionDAO;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
-    private Map<String, Integer> cantidadHabitacionesPorTipo;
+    private ContextoEstadoHabitaciones contexto;
+    private List<Habitacion> todasLasHabitaciones;
+
+    // Para selección múltiple (solo en contextos RESERVAR y OCUPAR)
+    private Set<CeldaSeleccionada> celdasSeleccionadas;
 
     @FXML
     public void initialize() {
-        // Datos de prueba
-        fechaInicio = LocalDate.of(2024, 11, 1);
-        fechaFin = LocalDate.of(2024, 11, 30); // 30 días
+        habitacionDAO = new HabitacionDAOImpl();
+        celdasSeleccionadas = new HashSet<>();
 
-        cantidadHabitacionesPorTipo = new LinkedHashMap<>(); // LinkedHashMap para mantener orden
-        cantidadHabitacionesPorTipo.put("Individual Estándar", 10);
-        cantidadHabitacionesPorTipo.put("Doble Estándar", 18);
-        cantidadHabitacionesPorTipo.put("Doble Superior", 8);
-        cantidadHabitacionesPorTipo.put("Superior Family Plan", 10);
-        cantidadHabitacionesPorTipo.put("Suite Doble", 2);
+        // Obtener datos del DataTransfer
+        fechaInicio = DataTransfer.getFechaDesdeEstadoHabitaciones();
+        fechaFin = DataTransfer.getFechaHastaEstadoHabitaciones();
+        contexto = DataTransfer.getContextoEstadoHabitaciones();
 
+        // Validar que se recibieron los datos
+        if (fechaInicio == null || fechaFin == null || contexto == null) {
+            mostrarError("Error: No se recibieron los datos correctamente");
+            return;
+        }
+
+        configurarSegunContexto();
         inicializarTabs();
-        cargarDatosPrueba();
+        cargarDatosReales();
+    }
+
+    private void configurarSegunContexto() {
+        switch (contexto) {
+            case MOSTRAR:
+                if (lblTitulo != null) {
+                    lblTitulo.setText("Estado de Habitaciones");
+                }
+                btnConfirmar.setVisible(false);
+                btnConfirmar.setManaged(false);
+                break;
+
+            case RESERVAR:
+                if (lblTitulo != null) {
+                    lblTitulo.setText("Seleccionar Habitaciones para Reservar");
+                }
+                btnConfirmar.setText("Confirmar Reserva");
+                btnConfirmar.setVisible(true);
+                btnConfirmar.setManaged(true);
+                break;
+
+            case OCUPAR:
+                if (lblTitulo != null) {
+                    lblTitulo.setText("Seleccionar Habitación para Ocupar");
+                }
+                btnConfirmar.setText("Confirmar Ocupación");
+                btnConfirmar.setVisible(true);
+                btnConfirmar.setManaged(true);
+                break;
+        }
     }
 
     private void inicializarTabs() {
@@ -110,18 +158,15 @@ public class EstadoHabitacionesController2 {
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        // Tamaño del viewport (área visible)
         scroll.setPrefViewportWidth(ANCHO_CELDA * COLUMNAS_VISIBLES);
         scroll.setPrefViewportHeight(ALTO_CELDA * FILAS_VISIBLES);
 
-        // Configurar scroll discreto (snap)
         configurarScrollDiscreto(scroll);
 
         return scroll;
     }
 
     private void configurarScrollDiscreto(ScrollPane scroll) {
-        // Listener para scroll horizontal discreto
         scroll.hvalueProperty().addListener((obs, oldVal, newVal) -> {
             double contentWidth = scroll.getContent().getBoundsInLocal().getWidth();
             double viewportWidth = scroll.getViewportBounds().getWidth();
@@ -138,7 +183,6 @@ public class EstadoHabitacionesController2 {
             }
         });
 
-        // Listener para scroll vertical discreto
         scroll.vvalueProperty().addListener((obs, oldVal, newVal) -> {
             double contentHeight = scroll.getContent().getBoundsInLocal().getHeight();
             double viewportHeight = scroll.getViewportBounds().getHeight();
@@ -159,44 +203,50 @@ public class EstadoHabitacionesController2 {
     private GridPane crearGridPane() {
         GridPane grid = new GridPane();
         grid.setGridLinesVisible(true);
-        grid.setSnapToPixel(true); // Importante para alineación perfecta
+        grid.setSnapToPixel(true);
         return grid;
     }
 
-    private void cargarDatosPrueba() {
-        // Cargar "Todas las Habitaciones" con todas las 48 habitaciones
-        List<String> todasHabitaciones = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : cantidadHabitacionesPorTipo.entrySet()) {
-            String tipo = entry.getKey();
-            int cantidad = entry.getValue();
-            for (int i = 1; i <= cantidad; i++) {
-                todasHabitaciones.add(tipo + " " + i);
-            }
-        }
-        cargarGrilla(gridTodasHabitaciones, fechaInicio, fechaFin, todasHabitaciones);
+    private void cargarDatosReales() {
+        // Cargar todas las habitaciones desde la BD
+        todasLasHabitaciones = habitacionDAO.listarTodas();
 
-        // Cargar cada tab específico
-        cargarGrillaPorTipo(gridIndividualEstandar, fechaInicio, fechaFin, "Individual Estándar", 10);
-        cargarGrillaPorTipo(gridDobleEstandar, fechaInicio, fechaFin, "Doble Estándar", 18);
-        cargarGrillaPorTipo(gridDobleSuperior, fechaInicio, fechaFin, "Doble Superior", 8);
-        cargarGrillaPorTipo(gridSuperiorFamily, fechaInicio, fechaFin, "Superior Family Plan", 10);
-        cargarGrillaPorTipo(gridSuiteDoble, fechaInicio, fechaFin, "Suite Doble", 2);
+        if (todasLasHabitaciones.isEmpty()) {
+            mostrarError("No hay habitaciones registradas en el sistema");
+            return;
+        }
+
+        // Cargar "Todas las Habitaciones"
+        cargarGrilla(gridTodasHabitaciones, fechaInicio, fechaFin, todasLasHabitaciones);
+
+        // Cargar cada tab específico por tipo
+        cargarGrillaPorTipo(gridIndividualEstandar, TipoHabitacion.INDIVIDUAL_ESTANDAR);
+        cargarGrillaPorTipo(gridDobleEstandar, TipoHabitacion.DOBLE_ESTANDAR);
+        cargarGrillaPorTipo(gridDobleSuperior, TipoHabitacion.DOBLE_SUPERIOR);
+        cargarGrillaPorTipo(gridSuperiorFamily, TipoHabitacion.SUPERIOR_FAMILY_PLAN);
+        cargarGrillaPorTipo(gridSuiteDoble, TipoHabitacion.SUITE_DOBLE);
     }
 
-    private void cargarGrillaPorTipo(GridPane grid, LocalDate inicio, LocalDate fin,
-                                     String tipoHabitacion, int cantidad) {
-        List<String> habitaciones = new ArrayList<>();
-        for (int i = 1; i <= cantidad; i++) {
-            habitaciones.add(tipoHabitacion + " " + i);
-        }
-        cargarGrilla(grid, inicio, fin, habitaciones);
+    private void cargarGrillaPorTipo(GridPane grid, TipoHabitacion tipo) {
+        List<Habitacion> habitacionesTipo = todasLasHabitaciones.stream()
+                .filter(h -> h.getTipo() == tipo)
+                .collect(Collectors.toList());
+
+        cargarGrilla(grid, fechaInicio, fechaFin, habitacionesTipo);
     }
 
     private void cargarGrilla(GridPane grid, LocalDate inicio, LocalDate fin,
-                              List<String> habitaciones) {
+                              List<Habitacion> habitaciones) {
         grid.getChildren().clear();
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
+
+        if (habitaciones.isEmpty()) {
+            Label lblVacio = new Label("No hay habitaciones de este tipo");
+            lblVacio.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
+            grid.add(lblVacio, 0, 0);
+            return;
+        }
 
         long cantidadDias = ChronoUnit.DAYS.between(inicio, fin) + 1;
         int numFilas = (int) cantidadDias + 1; // +1 para encabezado
@@ -228,13 +278,14 @@ public class EstadoHabitacionesController2 {
 
         // Encabezados de columnas (habitaciones)
         for (int col = 0; col < habitaciones.size(); col++) {
-            StackPane header = crearCeldaEncabezado(habitaciones.get(col));
+            Habitacion hab = habitaciones.get(col);
+            String texto = hab.getTipo().toString() + " " + hab.getNumero();
+            StackPane header = crearCeldaEncabezado(texto);
             grid.add(header, col + 1, 0);
         }
 
         // Contenido de la grilla
         LocalDate fechaActual = inicio;
-        Random random = new Random();
 
         for (int fila = 0; fila < cantidadDias; fila++) {
             // Encabezado de fila (fecha)
@@ -243,15 +294,23 @@ public class EstadoHabitacionesController2 {
             );
             grid.add(lblFecha, 0, fila + 1);
 
-            // Celdas de datos - Estados aleatorios para prueba
+            // Celdas de datos
             for (int col = 0; col < habitaciones.size(); col++) {
-                EstadoHabitacion estado = generarEstadoAleatorio(random);
-                StackPane celda = crearCeldaEstado(fechaActual, habitaciones.get(col), estado);
+                Habitacion hab = habitaciones.get(col);
+                EstadoHabitacion estado = obtenerEstadoHabitacion(hab, fechaActual);
+                StackPane celda = crearCeldaEstado(fechaActual, hab, estado);
                 grid.add(celda, col + 1, fila + 1);
             }
 
             fechaActual = fechaActual.plusDays(1);
         }
+    }
+
+    private EstadoHabitacion obtenerEstadoHabitacion(Habitacion habitacion, LocalDate fecha) {
+        // TODO: Aquí deberías consultar el estado real de la habitación en esa fecha
+        // considerando reservas existentes
+        // Por ahora retorno el estado actual de la habitación
+        return habitacion.getEstado();
     }
 
     private StackPane crearCeldaEncabezado(String texto) {
@@ -269,7 +328,7 @@ public class EstadoHabitacionesController2 {
         return celda;
     }
 
-    private StackPane crearCeldaEstado(LocalDate fecha, String habitacion, EstadoHabitacion estado) {
+    private StackPane crearCeldaEstado(LocalDate fecha, Habitacion habitacion, EstadoHabitacion estado) {
         StackPane celda = new StackPane();
         celda.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
@@ -278,7 +337,7 @@ public class EstadoHabitacionesController2 {
             case DISPONIBLE -> "#48bb78"; // Verde
             case RESERVADA -> "#f56565";  // Rojo
             case MANTENIMIENTO -> "#4299e1"; // Azul
-            case OCUPADA -> "#ed8936"; // Naranja
+           // case OCUPADA -> "#ed8936"; // Naranja
         };
 
         celda.setStyle(String.format(
@@ -292,77 +351,186 @@ public class EstadoHabitacionesController2 {
 
         celda.getChildren().add(label);
 
-        // Agregar interactividad
-        celda.setCursor(Cursor.HAND);
-        celda.setOnMouseClicked(e -> handleCeldaClick(fecha, habitacion, estado));
-        celda.setOnMouseEntered(e -> celda.setOpacity(0.8));
-        celda.setOnMouseExited(e -> celda.setOpacity(1.0));
+        // Configurar interactividad según contexto
+        if (contexto != ContextoEstadoHabitaciones.MOSTRAR) {
+            // Solo permitir selección si está disponible
+            if (estado == EstadoHabitacion.DISPONIBLE) {
+                celda.setCursor(Cursor.HAND);
+                celda.setOnMouseClicked(e -> handleCeldaClickSeleccion(celda, fecha, habitacion, estado));
+                celda.setOnMouseEntered(e -> celda.setOpacity(0.8));
+                celda.setOnMouseExited(e -> celda.setOpacity(1.0));
+            }
+        } else {
+            // Solo modo visualización
+            celda.setCursor(Cursor.HAND);
+            celda.setOnMouseClicked(e -> handleCeldaClickInfo(fecha, habitacion, estado));
+            celda.setOnMouseEntered(e -> celda.setOpacity(0.8));
+            celda.setOnMouseExited(e -> celda.setOpacity(1.0));
+        }
 
         return celda;
     }
 
-    private EstadoHabitacion generarEstadoAleatorio(Random random) {
-        int valor = random.nextInt(100);
-        if (valor < 50) return EstadoHabitacion.DISPONIBLE;
-        if (valor < 80) return EstadoHabitacion.RESERVADA;
-        if (valor < 90) return EstadoHabitacion.OCUPADA;
-        return EstadoHabitacion.MANTENIMIENTO;
-    }
-
-    private void handleCeldaClick(LocalDate fecha, String habitacion, EstadoHabitacion estado) {
-        System.out.println(String.format(
-                "Click en: %s - %s - Estado: %s",
-                fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                habitacion,
-                estado
-        ));
-
-        // Aquí puedes abrir un diálogo, cambiar estado, etc.
+    private void handleCeldaClickInfo(LocalDate fecha, Habitacion habitacion, EstadoHabitacion estado) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información de Habitación");
-        alert.setHeaderText(habitacion);
-        alert.setContentText(String.format(
-                "Fecha: %s\nEstado: %s",
-                fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                estado
-        ));
+        alert.setHeaderText(habitacion.getTipo() + " " + habitacion.getNumero());
+        //alert.setContentText(String.format(
+                //"Fecha: %s\nEstado: %s\nPrecio: $%.2f",
+               // fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                //estado,
+                //habitacion.getPrecio()
+       // ));
         alert.showAndWait();
+    }
+
+    private void handleCeldaClickSeleccion(StackPane celda, LocalDate fecha,
+                                           Habitacion habitacion, EstadoHabitacion estado) {
+        CeldaSeleccionada celdaSel = new CeldaSeleccionada(fecha, habitacion.getNumero());
+
+        if (celdasSeleccionadas.contains(celdaSel)) {
+            // Deseleccionar
+            celdasSeleccionadas.remove(celdaSel);
+            celda.setStyle(String.format(
+                    "-fx-background-color: %s; -fx-border-color: #2d3748; -fx-border-width: 1;",
+                    "#48bb78" // Verde original
+            ));
+        } else {
+            // Seleccionar
+            if (contexto == ContextoEstadoHabitaciones.OCUPAR && !celdasSeleccionadas.isEmpty()) {
+                mostrarAdvertencia("Solo puede seleccionar una habitación para ocupar");
+                return;
+            }
+
+            celdasSeleccionadas.add(celdaSel);
+            celda.setStyle(String.format(
+                    "-fx-background-color: %s; -fx-border-color: #2d3748; -fx-border-width: 3;",
+                    "#38a169" // Verde más oscuro para selección
+            ));
+        }
+
+        System.out.println("Celdas seleccionadas: " + celdasSeleccionadas.size());
     }
 
     @FXML
     private void onCancelarClicked() {
-        System.out.println("Cancelar clicked");
-        // Limpiar y cerrar
+        DataTransfer.limpiar();
+        HotelPremier.cambiarA("menu");
     }
 
     @FXML
     private void onVovlerClicked() {
-        System.out.println("Volver clicked");
-        // Volver a la pantalla anterior
+        HotelPremier.cambiarA("estadoHabitaciones1");
     }
 
     @FXML
     private void onConfirmarClicked() {
-        System.out.println("Confirmar clicked");
-        // Guardar cambios
+        if (celdasSeleccionadas.isEmpty()) {
+            mostrarAdvertencia("Debe seleccionar al menos una habitación");
+            return;
+        }
+
+        switch (contexto) {
+            case RESERVAR:
+                confirmarReserva();
+                break;
+            case OCUPAR:
+                confirmarOcupacion();
+                break;
+            default:
+                break;
+        }
     }
 
-    // Enum para estados
-    enum EstadoHabitacion {
-        DISPONIBLE("Disponible"),
-        RESERVADA("Reservada"),
-        OCUPADA("Ocupada"),
-        MANTENIMIENTO("Mantenimiento");
+    private void confirmarReserva() {
+        // TODO: Implementar lógica de reserva
+        StringBuilder mensaje = new StringBuilder("Habitaciones seleccionadas para reservar:\n\n");
+        for (CeldaSeleccionada celda : celdasSeleccionadas) {
+            mensaje.append(String.format("Habitación %d - Fecha: %s\n",
+                    celda.numeroHabitacion,
+                    celda.fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        }
 
-        private final String texto;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Reserva");
+        alert.setHeaderText("¿Desea confirmar la reserva?");
+        alert.setContentText(mensaje.toString());
 
-        EstadoHabitacion(String texto) {
-            this.texto = texto;
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // Aquí llamarías a tu lógica de negocio para reservar
+                mostrarExito("Reserva confirmada exitosamente");
+                HotelPremier.cambiarA("menu");
+            }
+        });
+    }
+
+    private void confirmarOcupacion() {
+        // TODO: Implementar lógica de ocupación
+        CeldaSeleccionada celda = celdasSeleccionadas.iterator().next();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Ocupación");
+        alert.setHeaderText("¿Desea confirmar la ocupación?");
+        alert.setContentText(String.format("Habitación %d\nFecha: %s",
+                celda.numeroHabitacion,
+                celda.fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // Aquí llamarías a tu lógica de negocio para ocupar
+                mostrarExito("Ocupación confirmada exitosamente");
+                HotelPremier.cambiarA("menu");
+            }
+        });
+    }
+
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarAdvertencia(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Advertencia");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarExito(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Éxito");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    // Clase auxiliar para rastrear celdas seleccionadas
+    private static class CeldaSeleccionada {
+        LocalDate fecha;
+        Integer numeroHabitacion;
+
+        CeldaSeleccionada(LocalDate fecha, Integer numeroHabitacion) {
+            this.fecha = fecha;
+            this.numeroHabitacion = numeroHabitacion;
         }
 
         @Override
-        public String toString() {
-            return texto;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CeldaSeleccionada that = (CeldaSeleccionada) o;
+            return Objects.equals(fecha, that.fecha) &&
+                    Objects.equals(numeroHabitacion, that.numeroHabitacion);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(fecha, numeroHabitacion);
         }
     }
 }

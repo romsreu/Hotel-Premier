@@ -88,8 +88,8 @@
                   <MenuButton contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="46.0" prefWidth="254.0" stylesheets="@../../styles/botones.css" text="Habitaciones y Reservas">
                     <items>
                         <MenuItem fx:id="mostrarEstadoHabs" mnemonicParsing="false" onAction="#on_mostrar_estado_habs_pressed" text="Mostrar Estado de Habitaciones" />
-                      <MenuItem mnemonicParsing="false" text="Reservar Habitación" />
-                      <MenuItem mnemonicParsing="false" text="Ocupar Habitación" />
+                      <MenuItem mnemonicParsing="false" onAction="#on_reservar_habs_pressed" text="Reservar Habitación" />
+                      <MenuItem mnemonicParsing="false" onAction="#on_ocupar_habs_pressed" text="Ocupar Habitación" />
                     </items>
                      <font>
                         <Font name="Lucida Bright" size="17.0" />
