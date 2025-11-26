@@ -6,14 +6,10 @@ import ar.utn.hotel.dao.ReservaDAO;
 import ar.utn.hotel.dao.impl.HabitacionDAOImpl;
 import ar.utn.hotel.dao.impl.PersonaDAOImpl;
 import ar.utn.hotel.dao.impl.ReservaDAOImpl;
-import ar.utn.hotel.dto.BuscarHuespedDTO;
 import ar.utn.hotel.dto.HabitacionDTO;
 import ar.utn.hotel.dto.ReservaDTO;
 import ar.utn.hotel.gestor.GestorHabitacion;
-import ar.utn.hotel.gestor.GestorHuesped;
 import ar.utn.hotel.gestor.GestorReserva;
-import ar.utn.hotel.model.Huesped;
-import ar.utn.hotel.services.InicializadorHabitaciones;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,7 +19,6 @@ import utils.SceneManager;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class  HotelPremier extends Application {
 
@@ -82,8 +77,8 @@ public class  HotelPremier extends Application {
 
     private void precargarEscenas (){
         // Escenas que se precargan (estáticas, no cambian)
-        SceneManager.precargarEscena("menu", "/views/interfaces/menu-principal.fxml");
-        SceneManager.precargarEscena("alta_huesped", "/views/interfaces/dar-alta-huesped.fxml");
+        SceneManager.precargarEscena("menu", "/views/interfaces/menu-principal/menu-principal.fxml");
+        SceneManager.precargarEscena("alta_huesped", "/views/interfaces/alta-huesped/alta-huesped.fxml");
         SceneManager.precargarEscena("estado_habs1", "/views/interfaces/estado-habitaciones/estado-habitaciones-1.fxml");
         SceneManager.precargarEscena("buscar_huesped1", "/views/interfaces/buscar-huesped/buscar-huesped-1.fxml");
         SceneManager.precargarEscena("reservar_hab1", "/views/interfaces/reservar-habitacion/reservar-habitacion-1.fxml");
