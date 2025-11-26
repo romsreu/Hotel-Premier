@@ -420,7 +420,7 @@ public class EstadoHabitacionesController2 {
 
     @FXML
     private void onVovlerClicked() {
-        HotelPremier.cambiarA("estadoHabitaciones1");
+        HotelPremier.cambiarA("estado_habs1");
     }
 
     @FXML

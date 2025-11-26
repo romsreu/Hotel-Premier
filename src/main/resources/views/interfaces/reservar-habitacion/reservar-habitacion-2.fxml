@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="950.0" styleClass="panel-azul-noche" stylesheets="@../../../styles/paneles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ReservarHabitacion.ReservarHabitacionController2">
+<AnchorPane prefHeight="600.0" prefWidth="950.0" styleClass="panel-azul-noche" stylesheets="@../../../styles/paneles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ReservarHabitacion.ReservarHabitacionController1">
     <children>
         <StackPane layoutY="40.0" prefHeight="75.0" prefWidth="950.0" styleClass="panel-negro-suave" stylesheets="@../../../styles/paneles.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Label styleClass="texto-titulo" stylesheets="@../../../styles/textos.css" text="RESUMEN DE RESERVA">
+                <Label styleClass="texto-titulo" stylesheets="@../../../styles/textos.css" text="RESERVAR HABITACIÓN">
                     <font>
                         <Font size="43.0" />
                     </font>
                 </Label>
             </children>
         </StackPane>
-
-        <ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="900.0" style="-fx-control-inner-background: transparent;" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="130.0">
-            <content>
-                <GridPane fx:id="gridPane" prefWidth="900.0" style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-padding: 0;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                    <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="80.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="150.0" prefWidth="200.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="150.0" prefWidth="200.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="150.0" prefWidth="200.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="40.0" prefHeight="40.0" />
-                    </rowConstraints>
+        <StackPane stylesheets="@../../../styles/paneles.css" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="150.0">
+            <children>
+                <VBox alignment="CENTER" maxWidth="500.0" spacing="15.0">
                     <children>
-                        <!-- Encabezados -->
-                        <Label styleClass="texto-subtitulo" stylesheets="@../../../styles/textos.css" text="Habitación">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Reserva a nombre de:">
                             <font>
-                                <Font name="Lucida Bright" size="14.0" />
+                                <Font name="Lucida Bright" size="18.0" />
                             </font>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
                         </Label>
-                        <Label styleClass="texto-subtitulo" stylesheets="@../../../styles/textos.css" text="Tipo de Habitación" GridPane.columnIndex="1">
-                            <font>
-                                <Font name="Lucida Bright" size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
-                        </Label>
-                        <Label styleClass="texto-subtitulo" stylesheets="@../../../styles/textos.css" text="Ingreso" GridPane.columnIndex="2">
-                            <font>
-                                <Font name="Lucida Bright" size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
-                        </Label>
-                        <Label styleClass="texto-subtitulo" stylesheets="@../../../styles/textos.css" text="Egreso" GridPane.columnIndex="3">
-                            <font>
-                                <Font name="Lucida Bright" size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
-                        </Label>
+                        <VBox alignment="CENTER" maxWidth="500.0" spacing="5.0">
+                            <children>
+                                <Label maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Apellido">
+                                    <font>
+                                        <Font name="Lucida Bright" size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="tfApellido" maxWidth="500.0" promptText="Ingrese el Apellido" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
+                        <VBox alignment="CENTER" maxWidth="500.0" spacing="5.0">
+                            <children>
+                                <Label maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Nombre">
+                                    <font>
+                                        <Font name="Lucida Bright" size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="tfNombre" maxWidth="500.0" promptText="Ingrese el Nombre" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
+                        <VBox alignment="CENTER" maxWidth="500.0" spacing="5.0">
+                            <children>
+                                <Label maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Teléfono">
+                                    <font>
+                                        <Font name="Lucida Bright" size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="tfTelefono" maxWidth="500.0" promptText="+34 2 123 547" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
                     </children>
-                </GridPane>
-            </content>
-        </ScrollPane>
-
+                </VBox>
+            </children>
+        </StackPane>
         <HBox alignment="CENTER" layoutX="4.0" layoutY="500.0" prefHeight="100.0" prefWidth="950.0" spacing="70.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#onCancelarClicked" prefHeight="54.0" prefWidth="250.0" styleClass="boton-cancelar" stylesheets="@../../../styles/botones.css" text="CANCELAR">
+                <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#onCancelarClicked" prefHeight="54.0" prefWidth="185.0" styleClass="boton-cancelar" stylesheets="@../../../styles/botones.css" text="CANCELAR">
                     <font>
                         <Font name="Lucida Bright Demibold" size="19.0" />
                     </font>
@@ -86,7 +86,7 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Button>
-                <Button fx:id="btnVolver" mnemonicParsing="false" onAction="#onVolverClicked" prefHeight="54.0" prefWidth="250.0" styleClass="boton-volver" stylesheets="@../../../styles/botones.css" text="VOLVER">
+                <Button fx:id="btnVolver" mnemonicParsing="false" onAction="#onVolverClicked" prefHeight="54.0" prefWidth="185.0" styleClass="boton-volver" stylesheets="@../../../styles/botones.css" text="VOLVER">
                     <font>
                         <Font name="Lucida Bright Demibold" size="19.0" />
                     </font>
@@ -94,7 +94,7 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Button>
-                <Button fx:id="btnAceptar" mnemonicParsing="false" onAction="#onAceptarClicked" prefHeight="54.0" prefWidth="250.0" styleClass="boton-confirmar" stylesheets="@../../../styles/botones.css" text="CONFIRMAR RESERVA" textFill="#e1ffcc">
+                <Button fx:id="btnConfirmarReserva" mnemonicParsing="false" prefHeight="54.0" prefWidth="185.0" styleClass="boton-confirmar" stylesheets="@../../../styles/botones.css" text="CONTINUAR" textFill="#e1ffcc">
                     <font>
                         <Font name="Lucida Bright Demibold" size="19.0" />
                     </font>
