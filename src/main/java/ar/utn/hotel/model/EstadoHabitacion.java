@@ -22,9 +22,6 @@ public class EstadoHabitacion {
     @Column(name = "estado", nullable = false, unique = true)
     private enums.EstadoHabitacion estado;
 
-    @Column(name = "descripcion")
-    private String descripcion;
-
     @OneToMany(mappedBy = "estado", cascade = CascadeType.ALL)
     @Builder.Default
     private Set<RegistroEstadoHabitacion> registros = new HashSet<>();

@@ -82,12 +82,11 @@ public class InicializadorHabitaciones {
             if (!estadoHabitacionDAO.existeEstado(estadoEnum)) {
                 EstadoHabitacion estado = EstadoHabitacion.builder()
                         .estado(estadoEnum)
-                        .descripcion(estadoEnum.getDescripcion())
                         .registros(new HashSet<>())
                         .build();
 
                 estadoHabitacionDAO.guardar(estado);
-                System.out.println("✓ Estado creado: " + estadoEnum.name() + " - " + estadoEnum.getDescripcion());
+                System.out.println("✓ Estado creado: " + estadoEnum.name());
             } else {
                 System.out.println("○ Estado ya existe: " + estadoEnum.name());
             }
@@ -242,7 +241,7 @@ public class InicializadorHabitaciones {
         System.out.println("\n--- Estados en catálogo ---");
         List<EstadoHabitacion> estados = estadoHabitacionDAO.listarTodos();
         for (EstadoHabitacion estado : estados) {
-            System.out.println("  • " + estado.getEstado().name() + " - " + estado.getDescripcion());
+            System.out.println("  • " + estado.getEstado().name());
         }
     }
 
