@@ -3,5 +3,6 @@ package enums;
 public enum EstadoHabitacion {
     DISPONIBLE,
     RESERVADA,
-    MANTENIMIENTO
+    MANTENIMIENTO,
+    OCUPADA
 }
