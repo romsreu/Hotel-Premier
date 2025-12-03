@@ -35,5 +35,9 @@
         <mapping class="ar.utn.hotel.model.Huesped"/>
         <mapping class="ar.utn.hotel.model.Habitacion"/>
         <mapping class="ar.utn.hotel.model.Reserva"/>
+        <mapping class="ar.utn.hotel.model.TipoHabitacion"/>
+        <mapping class="ar.utn.hotel.model.RegistroEstadoHabitacion"/>
+        <mapping class="ar.utn.hotel.model.TipoHabitacion"/>
+        <mapping class="ar.utn.hotel.model.EstadoHabitacion"/>
     </session-factory>
 </hibernate-configuration>

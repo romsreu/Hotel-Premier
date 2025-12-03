@@ -1,18 +1,25 @@
 package ar.utn.hotel.dao.impl;
 
+import ar.utn.hotel.dao.EstadoHabitacionDAO;
 import ar.utn.hotel.dao.HabitacionDAO;
-import enums.EstadoHabitacion;
 import ar.utn.hotel.model.Habitacion;
+import ar.utn.hotel.model.EstadoHabitacion;
+import ar.utn.hotel.model.RegistroEstadoHabitacion;
+import ar.utn.hotel.model.TipoHabitacion;
 import ar.utn.hotel.utils.HibernateUtil;
-import enums.TipoHabitacion;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 public class HabitacionDAOImpl implements HabitacionDAO {
+
+    private final EstadoHabitacionDAO estadoHabitacionDAO;
+
+    public HabitacionDAOImpl(EstadoHabitacionDAO estadoHabitacionDAO) {
+        this.estadoHabitacionDAO = estadoHabitacionDAO;
+    }
 
     @Override
     public Habitacion guardar(Habitacion habitacion) {
@@ -33,7 +40,13 @@ public class HabitacionDAOImpl implements HabitacionDAO {
     @Override
     public Habitacion buscarPorNumero(Integer numero) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(Habitacion.class, numero);
+            return session.createQuery(
+                            "SELECT DISTINCT h FROM Habitacion h " +
+                                    "LEFT JOIN FETCH h.historialEstados " +
+                                    "WHERE h.numero = :numero",
+                            Habitacion.class)
+                    .setParameter("numero", numero)
+                    .uniqueResult();
         }
     }
 
@@ -41,49 +54,48 @@ public class HabitacionDAOImpl implements HabitacionDAO {
     public List<Habitacion> listarTodas() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery(
-                            "FROM Habitacion h ORDER BY h.numero", Habitacion.class)
+                            "SELECT DISTINCT h FROM Habitacion h " +
+                                    "LEFT JOIN FETCH h.historialEstados " +
+                                    "ORDER BY h.numero",
+                            Habitacion.class)
                     .getResultList();
         }
     }
 
     @Override
     public List<Habitacion> listarPorRangoDeFechas(LocalDate fechaInicio, LocalDate fechaFin) {
-        Transaction transaction = null;
-        List<Habitacion> habitacionesDisponibles = null;
-
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-
-            // Buscar habitaciones que NO tienen reservas en el rango de fechas especificado
-            String hql = "SELECT h FROM Habitacion h WHERE h.numero NOT IN " +
+            String hql = "SELECT DISTINCT h FROM Habitacion h " +
+                    "LEFT JOIN FETCH h.historialEstados reg " +
+                    "LEFT JOIN FETCH reg.estado " +
+                    "WHERE h.numero NOT IN " +
                     "(SELECT DISTINCT hab.numero FROM Reserva r " +
                     "JOIN r.habitaciones hab " +
                     "WHERE r.fechaInicio <= :fechaFin " +
                     "AND r.fechaFin >= :fechaInicio) " +
-                    "AND h.estado = :estado " +
                     "ORDER BY h.numero";
 
-            var query = session.createQuery(hql, Habitacion.class);
-            query.setParameter("fechaInicio", fechaInicio);
-            query.setParameter("fechaFin", fechaFin);
-            query.setParameter("estado", EstadoHabitacion.DISPONIBLE);
-
-            habitacionesDisponibles = query.list();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
+            return session.createQuery(hql, Habitacion.class)
+                    .setParameter("fechaInicio", fechaInicio)
+                    .setParameter("fechaFin", fechaFin)
+                    .getResultList();
         }
-
-        return habitacionesDisponibles;
     }
 
     @Override
-    public void reservarHabitaciones(Set<Integer> numerosHabitaciones) {
+    public void reservarHabitaciones(Set<Integer> numerosHabitaciones, LocalDate fechaDesde, LocalDate fechaHasta) {
         Transaction transaction = null;
-
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+
+            // Obtener el estado RESERVADA del catálogo
+            EstadoHabitacion estadoReservada = estadoHabitacionDAO.buscarPorEstado(
+                    enums.EstadoHabitacion.RESERVADA
+            );
+
+            if (estadoReservada == null) {
+                throw new IllegalStateException("No existe el estado RESERVADA en el catálogo");
+            }
 
             for (Integer numero : numerosHabitaciones) {
                 Habitacion habitacion = session.get(Habitacion.class, numero);
@@ -94,15 +106,34 @@ public class HabitacionDAOImpl implements HabitacionDAO {
                     );
                 }
 
-                if (habitacion.getEstado() != EstadoHabitacion.DISPONIBLE) {
+                // Obtener el registro actual
+                RegistroEstadoHabitacion registroActual = habitacion.getEstadoActual();
+
+                // Verificar si el estado actual es DISPONIBLE
+                if (registroActual != null &&
+                        registroActual.getEstado().getEstado() != enums.EstadoHabitacion.DISPONIBLE) {
                     throw new IllegalStateException(
                             "La habitación número " + numero + " no está disponible. " +
-                                    "Estado actual: " + habitacion.getEstado()
+                                    "Estado actual: " + registroActual.getEstado().getEstado()
                     );
                 }
 
-                // Cambiar estado a RESERVADA
-                habitacion.setEstado(EstadoHabitacion.RESERVADA);
+                // Cerrar el registro actual si existe
+                if (registroActual != null) {
+                    registroActual.setFechaHasta(LocalDate.now().minusDays(1));
+                    session.merge(registroActual);
+                }
+
+                // Crear nuevo registro con estado RESERVADA
+                RegistroEstadoHabitacion nuevoRegistro = RegistroEstadoHabitacion.builder()
+                        .habitacion(habitacion)
+                        .estado(estadoReservada)
+                        .fechaDesde(fechaDesde != null ? fechaDesde : LocalDate.now())
+                        .fechaHasta(fechaHasta)
+                        .build();
+
+                habitacion.getHistorialEstados().add(nuevoRegistro);
+                session.persist(nuevoRegistro);
                 session.merge(habitacion);
             }
 
@@ -111,7 +142,70 @@ public class HabitacionDAOImpl implements HabitacionDAO {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Error al reservar habitaciones: " + e.getMessage());
+            throw new RuntimeException("Error al reservar habitaciones: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void ocuparHabitaciones(Set<Integer> numerosHabitaciones, LocalDate fechaDesde, LocalDate fechaHasta) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            // Obtener el estado OCUPADA del catálogo
+            EstadoHabitacion estadoOcupada = estadoHabitacionDAO.buscarPorEstado(
+                    enums.EstadoHabitacion.OCUPADA
+            );
+
+            if (estadoOcupada == null) {
+                throw new IllegalStateException("No existe el estado OCUPADA en el catálogo");
+            }
+
+            for (Integer numero : numerosHabitaciones) {
+                Habitacion habitacion = session.get(Habitacion.class, numero);
+
+                if (habitacion == null) {
+                    throw new IllegalArgumentException(
+                            "La habitación número " + numero + " no existe"
+                    );
+                }
+
+                // Obtener el registro actual
+                RegistroEstadoHabitacion registroActual = habitacion.getEstadoActual();
+
+                // Verificar si el estado actual es RESERVADA
+                if (registroActual == null ||
+                        registroActual.getEstado().getEstado() != enums.EstadoHabitacion.RESERVADA) {
+                    throw new IllegalStateException(
+                            "La habitación número " + numero + " no está reservada. " +
+                                    "Estado actual: " + (registroActual != null ?
+                                    registroActual.getEstado().getEstado() : "SIN ESTADO")
+                    );
+                }
+
+                // Cerrar el registro actual
+                registroActual.setFechaHasta(LocalDate.now().minusDays(1));
+                session.merge(registroActual);
+
+                // Crear nuevo registro con estado OCUPADA
+                RegistroEstadoHabitacion nuevoRegistro = RegistroEstadoHabitacion.builder()
+                        .habitacion(habitacion)
+                        .estado(estadoOcupada)
+                        .fechaDesde(fechaDesde != null ? fechaDesde : LocalDate.now())
+                        .fechaHasta(fechaHasta)
+                        .build();
+
+                habitacion.getHistorialEstados().add(nuevoRegistro);
+                session.persist(nuevoRegistro);
+                session.merge(habitacion);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RuntimeException("Error al ocupar habitaciones: " + e.getMessage(), e);
         }
     }
 
@@ -119,25 +213,37 @@ public class HabitacionDAOImpl implements HabitacionDAO {
     public List<Habitacion> buscarPorTipo(TipoHabitacion tipo) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery(
-                            "FROM Habitacion h WHERE h.tipo = :tipo ORDER BY h.numero", Habitacion.class)
+                            "SELECT DISTINCT h FROM Habitacion h " +
+                                    "LEFT JOIN FETCH h.historialEstados " +
+                                    "WHERE h.tipo = :tipo " +
+                                    "ORDER BY h.numero",
+                            Habitacion.class)
                     .setParameter("tipo", tipo)
                     .getResultList();
         }
     }
 
     @Override
-    public List<Habitacion> buscarPorEstado(EstadoHabitacion estado) {
+    public List<Habitacion> buscarPorEstado(enums.EstadoHabitacion estado) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery(
-                            "FROM Habitacion h WHERE h.estado = :estado ORDER BY h.numero", Habitacion.class)
+            String hql = "SELECT DISTINCT h FROM Habitacion h " +
+                    "JOIN h.historialEstados reg " +
+                    "JOIN reg.estado e " +
+                    "WHERE e.estado = :estado " +
+                    "AND (reg.fechaHasta IS NULL OR reg.fechaHasta >= :now) " +
+                    "AND reg.fechaDesde <= :now " +
+                    "ORDER BY h.numero";
+
+            return session.createQuery(hql, Habitacion.class)
                     .setParameter("estado", estado)
+                    .setParameter("now", LocalDate.now())
                     .getResultList();
         }
     }
 
     @Override
     public List<Habitacion> buscarDisponibles() {
-        return buscarPorEstado(EstadoHabitacion.DISPONIBLE);
+        return buscarPorEstado(enums.EstadoHabitacion.DISPONIBLE);
     }
 
     @Override
@@ -174,7 +280,7 @@ public class HabitacionDAOImpl implements HabitacionDAO {
     }
 
     @Override
-    public boolean existeNumero(String numero) {
+    public boolean existeNumero(Integer numero) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Long count = session.createQuery(
                             "SELECT COUNT(h) FROM Habitacion h WHERE h.numero = :numero", Long.class)

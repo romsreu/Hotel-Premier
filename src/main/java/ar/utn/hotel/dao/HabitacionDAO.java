@@ -1,9 +1,8 @@
 package ar.utn.hotel.dao;
 
+import ar.utn.hotel.model.TipoHabitacion;
 import enums.EstadoHabitacion;
-import enums.TipoHabitacion;
 import ar.utn.hotel.model.Habitacion;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -28,9 +27,11 @@ public interface HabitacionDAO {
 
     void eliminar(Integer id);
 
-    boolean existeNumero(String numero);
+    void reservarHabitaciones(Set<Integer> numerosHabitaciones, LocalDate fechaDesde, LocalDate fechaHasta);
+
+    void ocuparHabitaciones(Set<Integer> numerosHabitaciones, LocalDate fechaDesde, LocalDate fechaHasta);
+
+    boolean existeNumero(Integer numero);
 
     Long contarPorTipo(TipoHabitacion tipo);
-
-    void reservarHabitaciones(Set<Integer> numerosHabitaciones);
 }
