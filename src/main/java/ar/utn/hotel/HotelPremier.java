@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utils.GeorefLoader;
 import utils.SceneManager;
+import utils.SembrarDatos;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -28,6 +29,8 @@ public class  HotelPremier extends Application {
     public void start(Stage stage) {
 
         //probarMetodos();
+
+        SembrarDatos.sembrar();
 
         GeorefLoader.cargarTodo();
         precargarEscenas();
@@ -48,7 +51,7 @@ public class  HotelPremier extends Application {
         ReservaDAO reservaDAO = new ReservaDAOImpl(personaDAO, habitacionDAO);
 
         // Inicializar Gestores
-        GestorHabitacion gestorHabitacion = new GestorHabitacion(habitacionDAO);
+        GestorHabitacion gestorHabitacion = new GestorHabitacion();
         GestorReserva gestorReserva = new GestorReserva(reservaDAO, personaDAO);
 
         // Ejemplo: Crear reserva usando DTO con ID de persona
@@ -95,4 +98,5 @@ public class  HotelPremier extends Application {
         mainScene.setRoot(SceneManager.getRoot(nombreEscena));
     }
 }
+
 

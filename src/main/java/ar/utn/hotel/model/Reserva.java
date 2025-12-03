@@ -30,7 +30,7 @@ public class Reserva {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "reserva_habitacion",
             joinColumns = @JoinColumn(name = "reserva_id"),

@@ -1,48 +1,36 @@
 package ar.utn.hotel.model;
 
-import enums.EstadoHabitacion;
-import enums.TipoHabitacion;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.HashSet;
+
 import java.util.Set;
+import java.util.HashSet;
 
 @Entity
-@Table(name = "habitacion")
-@Getter
-@Setter
+@Table(name = "habitaciones")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Habitacion {
+
     @Id
-    @Column(name = "numero", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private Integer numero;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo", nullable = false)
-    private TipoHabitacion tipo;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tipo_id", nullable = false)
+    private TipoHabitacion tipoHabitacion;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false)
-    private EstadoHabitacion estado;
+    @Column(nullable = false)
+    private Integer capacidad;
 
-    @Column(name = "costo_noche", nullable = false)
-    private Double costoNoche;
+    @Column(length = 500)
+    private String descripcion;
 
-    @Column(name = "piso")
-    private Integer piso;
-
-    @ManyToMany(mappedBy = "habitaciones")
-    @Builder.Default
+    @ManyToMany(mappedBy = "habitaciones") // "habitaciones" debe coincidir con el nombre del atributo en la clase Reserva
+    @ToString.Exclude // IMPORTANTE: Evita bucles infinitos al imprimir
+    @EqualsAndHashCode.Exclude // IMPORTANTE: Evita bucles infinitos en comparaciones
+    @Builder.Default // Para que el builder inicialice el HashSet
     private Set<Reserva> reservas = new HashSet<>();
-
-    @Override
-    public String toString() {
-        return "Habitacion{" +
-                "numero=" + numero +
-                ", tipo='" + tipo + '\'' +
-                ", costoNoche=" + costoNoche +
-                '}';
-    }
 }

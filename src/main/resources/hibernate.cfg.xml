@@ -8,7 +8,7 @@
         <!-- === Conexión a PostgreSQL === -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
 
-        <property name="hibernate.connection.url">jdbc:postgresql://ep-flat-fog-ac6vfa02-pooler.sa-east-1.aws.neon.tech:5432/hotelpremier?sslmode=require</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://ep-lucky-hall-achv15jh.sa-east-1.aws.neon.tech:5432/hotelpremier?sslmode=require</property>
         <property name="hibernate.connection.username">neondb_owner</property>
         <property name="hibernate.connection.password">npg_KsfwED41lrRA</property>
 
@@ -35,5 +35,8 @@
         <mapping class="ar.utn.hotel.model.Huesped"/>
         <mapping class="ar.utn.hotel.model.Habitacion"/>
         <mapping class="ar.utn.hotel.model.Reserva"/>
+        <mapping class="ar.utn.hotel.model.TipoHabitacion"/>
+        <mapping class="ar.utn.hotel.model.EstadoHabitacion"/>
+        <mapping class="ar.utn.hotel.model.RegistroEstadoHabitacion"/>
     </session-factory>
 </hibernate-configuration>

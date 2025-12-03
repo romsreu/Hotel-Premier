@@ -13,6 +13,10 @@ public class HabitacionDTO {
     private Integer numero;
     private String tipo;
     private Double costoNoche;
+    private Integer capacidad;
+    private String descripcion;
+    private String tipoDescripcion;
+
 
     @Builder.Default
     private EstadoHabitacion estado = EstadoHabitacion.DISPONIBLE;
@@ -23,7 +27,7 @@ public class HabitacionDTO {
                 "numero=" + numero +
                 ", tipo='" + tipo + '\'' +
                 ", costoNoche=" + costoNoche +
-                ", estado=" + estado +
+                ", tipoDescripcion=" + tipoDescripcion +
                 '}';
     }
 }
