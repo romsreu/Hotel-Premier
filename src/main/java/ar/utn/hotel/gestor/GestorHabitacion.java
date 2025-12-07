@@ -1,7 +1,7 @@
 package ar.utn.hotel.gestor;
 
-import ar.utn.hotel.dao.*;
-import ar.utn.hotel.dao.impl.*;
+import ar.utn.hotel.dao.implement.*;
+import ar.utn.hotel.dao.interfaces.*;
 import ar.utn.hotel.dto.EstadiaDTO;
 import ar.utn.hotel.dto.HabitacionDTO;
 import ar.utn.hotel.model.*;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * Gestor que maneja la lógica de negocio relacionada con las habitaciones.
- * Incluye gestión de estados, reservas y estadías (ocupaciones).
+ * Incluye gestión de estados, reservas, estadías y catálogos base del sistema.
  */
 public class GestorHabitacion {
 
@@ -46,8 +46,7 @@ public class GestorHabitacion {
         this.habitacionDAO = new HabitacionDAOImpl(tipoEstadoDAO);
         this.tipoHabitacionDAO = new TipoHabitacionDAOImpl();
         this.estadiaDAO = new EstadiaDAOImpl();
-        PersonaDAOImpl personaDAO = new PersonaDAOImpl();
-        this.reservaDAO = new ReservaDAOImpl(personaDAO, tipoEstadoDAO);
+        this.reservaDAO = new ReservaDAOImpl(tipoEstadoDAO);
     }
 
     /**
@@ -55,6 +54,77 @@ public class GestorHabitacion {
      */
     public void setGestorReserva(GestorReserva gestorReserva) {
         this.gestorReserva = gestorReserva;
+    }
+
+    // ========== GESTIÓN DE CATÁLOGOS BASE ==========
+
+    /**
+     * Crea un tipo de estado en el catálogo
+     */
+    public TipoEstado crearTipoEstado(EstadoHab estado) {
+        if (tipoEstadoDAO.existeEstado(estado)) {
+            throw new IllegalArgumentException("Ya existe el tipo de estado: " + estado.name());
+        }
+
+        TipoEstado tipoEstado = TipoEstado.builder()
+                .estado(estado)
+                .build();
+
+        return tipoEstadoDAO.guardar(tipoEstado);
+    }
+
+    /**
+     * Verifica si existe un tipo de estado
+     */
+    public boolean existeTipoEstado(EstadoHab estado) {
+        return tipoEstadoDAO.existeEstado(estado);
+    }
+
+    /**
+     * Lista todos los tipos de estado del catálogo
+     */
+    public List<TipoEstado> listarTiposEstado() {
+        return tipoEstadoDAO.listarTodos();
+    }
+
+    /**
+     * Crea un tipo de habitación en el catálogo
+     */
+    public TipoHabitacion crearTipoHabitacion(String nombre, String descripcion,
+                                              Integer capacidad, Double costoNoche) {
+        if (tipoHabitacionDAO.existeNombre(nombre)) {
+            throw new IllegalArgumentException("Ya existe un tipo de habitación con el nombre: " + nombre);
+        }
+
+        TipoHabitacion tipo = TipoHabitacion.builder()
+                .nombre(nombre)
+                .descripcion(descripcion)
+                .capacidad(capacidad)
+                .costoNoche(costoNoche)
+                .build();
+
+        return tipoHabitacionDAO.guardar(tipo);
+    }
+
+    /**
+     * Busca un tipo de habitación por nombre
+     */
+    public TipoHabitacion buscarTipoHabitacionPorNombre(String nombre) {
+        return tipoHabitacionDAO.buscarPorNombre(nombre);
+    }
+
+    /**
+     * Verifica si existe un tipo de habitación
+     */
+    public boolean existeTipoHabitacion(String nombre) {
+        return tipoHabitacionDAO.existeNombre(nombre);
+    }
+
+    /**
+     * Lista todos los tipos de habitación del catálogo
+     */
+    public List<TipoHabitacion> listarTiposHabitacion() {
+        return tipoHabitacionDAO.listarTodos();
     }
 
     // ========== GESTIÓN DE HABITACIONES ==========
@@ -501,8 +571,8 @@ public class GestorHabitacion {
                 .idEstadia(estadia.getIdEstadia())
                 .idReserva(estadia.getReserva().getId())
                 .numeroHabitacion(estadia.getHabitacion().getNumero())
-                .nombreHuesped(estadia.getReserva().getPersona().getNombre())
-                .apellidoHuesped(estadia.getReserva().getPersona().getApellido())
+                .nombreHuesped(estadia.getReserva().getHuesped().getNombre())
+                .apellidoHuesped(estadia.getReserva().getHuesped().getApellido())
                 .fechaInicio(estadia.getFechaInicio())
                 .fechaFin(estadia.getFechaFin())
                 .horaCheckIn(estadia.getHoraCheckIn())
@@ -543,6 +613,16 @@ public class GestorHabitacion {
         if (dto.getPiso() == null || dto.getPiso() < 0) {
             throw new IllegalArgumentException("El piso es inválido");
         }
+    }
+
+    /**
+     * Obtiene todos los estados de múltiples habitaciones en un rango de fechas
+     * Optimizado para evitar N+1 queries
+     */
+    public Map<String, EstadoHab> obtenerEstadosEnRango(List<Integer> numerosHabitaciones,
+                                                        LocalDate fechaInicio,
+                                                        LocalDate fechaFin) {
+        return estadoHabitacionDAO.obtenerEstadosEnRango(numerosHabitaciones, fechaInicio, fechaFin);
     }
 
     /**

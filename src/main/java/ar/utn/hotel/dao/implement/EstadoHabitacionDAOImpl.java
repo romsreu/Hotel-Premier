@@ -1,13 +1,16 @@
-package ar.utn.hotel.dao.impl;
+package ar.utn.hotel.dao.implement;
 
-import ar.utn.hotel.dao.EstadoHabitacionDAO;
+import ar.utn.hotel.dao.interfaces.EstadoHabitacionDAO;
 import ar.utn.hotel.model.EstadoHabitacion;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 import enums.EstadoHab;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EstadoHabitacionDAOImpl implements EstadoHabitacionDAO {
 
@@ -166,6 +169,63 @@ public class EstadoHabitacionDAOImpl implements EstadoHabitacionDAO {
                 transaction.rollback();
             }
             throw new RuntimeException("Error al eliminar estado habitación: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Map<String, EstadoHab> obtenerEstadosEnRango(List<Integer> numerosHabitaciones,
+                                                        LocalDate fechaInicio,
+                                                        LocalDate fechaFin) {
+        Map<String, EstadoHab> resultado = new HashMap<>();
+
+        if (numerosHabitaciones == null || numerosHabitaciones.isEmpty()) {
+            return resultado;
+        }
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Una sola query que trae TODOS los estados necesarios
+            List<EstadoHabitacion> estados = session.createQuery(
+                            "SELECT eh FROM EstadoHabitacion eh " +
+                                    "JOIN FETCH eh.habitacion h " +
+                                    "JOIN FETCH eh.tipoEstado te " +
+                                    "WHERE h.numero IN :numeros " +
+                                    "AND (eh.fechaHasta IS NULL OR eh.fechaHasta >= :inicio) " +
+                                    "AND eh.fechaDesde <= :fin " +
+                                    "ORDER BY h.numero, eh.fechaDesde",
+                            EstadoHabitacion.class)
+                    .setParameterList("numeros", numerosHabitaciones)
+                    .setParameter("inicio", fechaInicio)
+                    .setParameter("fin", fechaFin)
+                    .getResultList();
+
+            // Mapear cada combinación habitación-fecha al estado correspondiente
+            for (Integer numHab : numerosHabitaciones) {
+                LocalDate fechaActual = fechaInicio;
+                while (!fechaActual.isAfter(fechaFin)) {
+                    // Buscar el estado correspondiente a esta fecha
+                    LocalDate finalFechaActual = fechaActual;
+                    LocalDate finalFechaActual1 = fechaActual;
+                    EstadoHab estadoEnFecha = estados.stream()
+                            .filter(eh -> eh.getHabitacion().getNumero().equals(numHab))
+                            .filter(eh -> !finalFechaActual.isBefore(eh.getFechaDesde()))
+                            .filter(eh -> eh.getFechaHasta() == null || !finalFechaActual1.isAfter(eh.getFechaHasta()))
+                            .map(eh -> eh.getTipoEstado().getEstado())
+                            .findFirst()
+                            .orElse(EstadoHab.DISPONIBLE);
+
+                    String clave = numHab + "_" + fechaActual;
+                    resultado.put(clave, estadoEnFecha);
+
+                    fechaActual = fechaActual.plusDays(1);
+                }
+            }
+
+            return resultado;
+
+        } catch (Exception e) {
+            System.err.println("Error al obtener estados en rango: " + e.getMessage());
+            e.printStackTrace();
+            return resultado;
         }
     }
 }

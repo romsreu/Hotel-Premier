@@ -1,7 +1,7 @@
 package controllers.BuscarHuesped;
 
 import ar.utn.hotel.HotelPremier;
-import ar.utn.hotel.dto.BuscarHuespedDTO;
+import ar.utn.hotel.dto.HuespedDTO;
 import ar.utn.hotel.gestor.GestorHuesped;
 import ar.utn.hotel.model.Huesped;
 import controllers.PopUp.PopUpController;
@@ -58,7 +58,7 @@ public class BuscarHuespedController1 {
             return;
         }
 
-        BuscarHuespedDTO dto = crearDTODesdeFormulario();
+        HuespedDTO dto = crearDTODesdeFormulario();
         realizarBusqueda(dto);
     }
 
@@ -73,21 +73,21 @@ public class BuscarHuespedController1 {
                 (txtNumeroDocumento.getText() != null && !txtNumeroDocumento.getText().trim().isEmpty());
     }
 
-    private BuscarHuespedDTO crearDTODesdeFormulario() {
-        BuscarHuespedDTO dto = new BuscarHuespedDTO();
-
+    private HuespedDTO crearDTODesdeFormulario() {
         String nombre = txtNombre.getText();
         String apellido = txtApellido.getText();
         String numeroDocumento = txtNumeroDocumento.getText();
 
-        dto.setNombre((nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : null);
-        dto.setApellido((apellido != null && !apellido.trim().isEmpty()) ? apellido.trim() : null);
-        dto.setNumeroDocumento((numeroDocumento != null && !numeroDocumento.trim().isEmpty()) ? numeroDocumento.trim() : null);
-
-        return dto;
+        // Usar el builder de HuespedDTO
+        return HuespedDTO.builder()
+                .nombre((nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : null)
+                .apellido((apellido != null && !apellido.trim().isEmpty()) ? apellido.trim() : null)
+                .numeroDocumento((numeroDocumento != null && !numeroDocumento.trim().isEmpty()) ?
+                        numeroDocumento.trim() : null)
+                .build();
     }
 
-    private void realizarBusqueda(BuscarHuespedDTO dto) {
+    private void realizarBusqueda(HuespedDTO dto) {
         try {
             GestorHuesped gestor = new GestorHuesped();
             List<Huesped> resultados = gestor.buscarHuesped(dto);

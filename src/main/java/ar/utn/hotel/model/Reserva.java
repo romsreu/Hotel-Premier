@@ -18,8 +18,8 @@ public class Reserva {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_persona", nullable = false)
-    private Persona persona;
+    @JoinColumn(name = "id_huesped", nullable = false)
+    private Huesped huesped;
 
     @ManyToOne
     @JoinColumn(name = "numero_habitacion", nullable = false)

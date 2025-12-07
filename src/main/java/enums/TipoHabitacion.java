@@ -22,4 +22,5 @@ public enum TipoHabitacion {
     public double getCostoNoche() {
         return costoNoche;
     }
+
 }

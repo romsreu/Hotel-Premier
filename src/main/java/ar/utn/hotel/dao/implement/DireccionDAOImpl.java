@@ -1,8 +1,8 @@
-package ar.utn.hotel.dao.impl;
+package ar.utn.hotel.dao.implement;
 
-import ar.utn.hotel.dao.DireccionDAO;
+import ar.utn.hotel.dao.interfaces.DireccionDAO;
 import ar.utn.hotel.model.Direccion;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

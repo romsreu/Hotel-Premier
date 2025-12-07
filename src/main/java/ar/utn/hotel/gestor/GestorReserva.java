@@ -1,17 +1,19 @@
 package ar.utn.hotel.gestor;
 
-import ar.utn.hotel.dao.PersonaDAO;
-import ar.utn.hotel.dao.ReservaDAO;
-import ar.utn.hotel.dao.impl.EstadoHabitacionDAOImpl;
-import ar.utn.hotel.dao.impl.PersonaDAOImpl;
-import ar.utn.hotel.dao.impl.ReservaDAOImpl;
-import ar.utn.hotel.dao.impl.TipoEstadoDAOImpl;
+import ar.utn.hotel.dao.interfaces.HuespedDAO;
+import ar.utn.hotel.dao.interfaces.ReservaDAO;
+import ar.utn.hotel.dao.implement.HuespedDAOImpl;
+import ar.utn.hotel.dao.implement.ReservaDAOImpl;
+import ar.utn.hotel.dao.implement.TipoEstadoDAOImpl;
+import ar.utn.hotel.dto.CrearReservaDTO;
 import ar.utn.hotel.dto.ReservaDTO;
-import ar.utn.hotel.model.Persona;
+import ar.utn.hotel.model.Huesped;
 import ar.utn.hotel.model.Reserva;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -21,18 +23,18 @@ import java.util.stream.Collectors;
 public class GestorReserva {
 
     private final ReservaDAO reservaDAO;
-    private final PersonaDAO personaDAO;
+    private final HuespedDAO huespedDAO;
     private GestorHabitacion gestorHabitacion; // Referencia circular controlada
 
-    public GestorReserva(ReservaDAO reservaDAO, PersonaDAO personaDAO) {
+    public GestorReserva(ReservaDAO reservaDAO, HuespedDAO huespedDAO) {
         this.reservaDAO = reservaDAO;
-        this.personaDAO = personaDAO;
+        this.huespedDAO = huespedDAO;
     }
 
     public GestorReserva() {
-        this.personaDAO = new PersonaDAOImpl();
+        this.huespedDAO = new HuespedDAOImpl();
         TipoEstadoDAOImpl tipoEstadoDAO = new TipoEstadoDAOImpl();
-        this.reservaDAO = new ReservaDAOImpl(personaDAO, tipoEstadoDAO);
+        this.reservaDAO = new ReservaDAOImpl(tipoEstadoDAO);
     }
 
     /**
@@ -43,110 +45,54 @@ public class GestorReserva {
     }
 
     /**
-     * Crea una o múltiples reservas según las habitaciones y fechas proporcionadas.
-     * IMPORTANTE: Este método también cambia el estado de las habitaciones a RESERVADA.
+     * Crea una reserva para un huésped registrado.
+     * IMPORTANTE: Este método también cambia el estado de la habitación a RESERVADA.
      *
-     * @param dto DTO con la información de la reserva
-     * @return Lista de ReservaDTO (una por cada habitación reservada)
+     * @param dto DTO con la información para crear la reserva
+     * @return ReservaDTO con los datos de la reserva creada
      * @throws Exception si hay algún error en el proceso
      */
-    public List<ReservaDTO> crearReserva(ReservaDTO dto) throws Exception {
-        validarReservaDTO(dto);
+    public ReservaDTO crearReserva(CrearReservaDTO dto) throws Exception {
+        validarCrearReservaDTO(dto);
 
-        Persona p = personaDAO.buscarPorNombreApellido(dto.getNombrePersona(), dto.getApellidoPersona());
-
-        if (p == null) {
-            throw new IllegalArgumentException("Error: La persona no existe en el sistema.");
+        // Verificar que el huésped existe
+        Huesped huesped = huespedDAO.obtenerPorId(dto.getIdHuesped());
+        if (huesped == null) {
+            throw new IllegalArgumentException("Error: El huésped no existe en el sistema.");
         }
 
-        // Convertir a Map<Integer, RangoFechas>
-        // Como el DTO usa las MISMAS fechas para todas las habitaciones,
-        // creamos un RangoFechas idéntico para cada habitación
-        Map<Integer, ReservaDAO.RangoFechas> habitacionesConFechas = new HashMap<>();
+        // Crear la reserva (el DAO ya maneja el cambio de estado de la habitación)
+        Reserva reserva = reservaDAO.crearReserva(dto);
 
-        for (Integer numeroHab : dto.getNumerosHabitaciones()) {
-            habitacionesConFechas.put(
-                    numeroHab,
-                    new ReservaDAO.RangoFechas(dto.getFechaInicio(), dto.getFechaFin())
-            );
-        }
-
-        // Crear las reservas (una por habitación)
-        List<Reserva> reservas = reservaDAO.crearReservas(
-                p.getId(),
-                habitacionesConFechas
-        );
-
-        // Cambiar estado de habitaciones a RESERVADA
+        // Cambiar estado de la habitación a RESERVADA usando el gestor
         if (gestorHabitacion != null) {
             gestorHabitacion.reservarHabitaciones(
-                    dto.getNumerosHabitaciones(),
+                    Collections.singleton(dto.getNumeroHabitacion()),
                     dto.getFechaInicio(),
                     dto.getFechaFin()
             );
         }
 
-        // Convertir todas las reservas a DTOs
-        return reservas.stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+        return toDTO(reserva);
     }
 
-    /**
-     * Método de conveniencia que crea una reserva con fechas específicas por habitación.
-     * Útil cuando cada habitación puede tener fechas diferentes.
-     * IMPORTANTE: También cambia el estado de las habitaciones a RESERVADA.
-     *
-     * @param nombrePersona Nombre de la persona
-     * @param apellidoPersona Apellido de la persona
-     * @param habitacionesConFechas Map con número de habitación y sus fechas específicas
-     * @return Lista de reservas creadas
-     * @throws Exception si hay algún error en el proceso
-     */
-    public List<ReservaDTO> crearReservasConFechasEspecificas(
-            String nombrePersona,
-            String apellidoPersona,
-            Map<Integer, ReservaDAO.RangoFechas> habitacionesConFechas) throws Exception {
 
-        if (nombrePersona == null || nombrePersona.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre de la persona es obligatorio");
-        }
+    public List<ReservaDTO> crearReservasMultiples(List<CrearReservaDTO> dtos) throws Exception {
+        List<ReservaDTO> reservasCreadas = new ArrayList<>();
 
-        if (apellidoPersona == null || apellidoPersona.trim().isEmpty()) {
-            throw new IllegalArgumentException("El apellido de la persona es obligatorio");
-        }
+        for (CrearReservaDTO dto : dtos) {
+            ReservaDTO reserva = crearReserva(dto);
+            reservasCreadas.add(reserva);
 
-        if (habitacionesConFechas == null || habitacionesConFechas.isEmpty()) {
-            throw new IllegalArgumentException("Debe especificar al menos una habitación con fechas");
-        }
-
-        Persona p = personaDAO.buscarPorNombreApellido(nombrePersona, apellidoPersona);
-
-        if (p == null) {
-            throw new IllegalArgumentException("Error: La persona no existe en el sistema.");
-        }
-
-        // Crear las reservas
-        List<Reserva> reservas = reservaDAO.crearReservas(p.getId(), habitacionesConFechas);
-
-        // Cambiar estado de cada habitación a RESERVADA con sus fechas específicas
-        if (gestorHabitacion != null) {
-            for (Map.Entry<Integer, ReservaDAO.RangoFechas> entry : habitacionesConFechas.entrySet()) {
-                Set<Integer> habitacion = Collections.singleton(entry.getKey());
-                ReservaDAO.RangoFechas rango = entry.getValue();
-
-                gestorHabitacion.reservarHabitaciones(
-                        habitacion,
-                        rango.getFechaInicio(),
-                        rango.getFechaFin()
-                );
+            // Pequeño delay entre operaciones
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
 
-        // Convertir a DTOs
-        return reservas.stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+        return reservasCreadas;
     }
 
     /**
@@ -182,10 +128,10 @@ public class GestorReserva {
     }
 
     /**
-     * Obtiene reservas por persona
+     * Obtiene reservas por huésped
      */
-    public List<ReservaDTO> obtenerReservasPorPersona(Long idPersona) {
-        List<Reserva> reservas = reservaDAO.obtenerPorPersona(idPersona);
+    public List<ReservaDTO> obtenerReservasPorHuesped(Long idHuesped) {
+        List<Reserva> reservas = reservaDAO.obtenerPorHuesped(idHuesped);
 
         return reservas.stream()
                 .map(this::toDTO)
@@ -212,6 +158,17 @@ public class GestorReserva {
     }
 
     /**
+     * Obtiene reservas por habitación
+     */
+    public List<ReservaDTO> obtenerReservasPorHabitacion(Integer numeroHabitacion) {
+        List<Reserva> reservas = reservaDAO.obtenerPorHabitacion(numeroHabitacion);
+
+        return reservas.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Cancela una reserva y libera la habitación (cambia estado a DISPONIBLE)
      */
     public void cancelarReserva(Long id) {
@@ -229,11 +186,12 @@ public class GestorReserva {
 
         // Liberar la habitación (cambiar estado a DISPONIBLE)
         if (gestorHabitacion != null) {
-            Set<Integer> habitacion = Collections.singleton(reserva.getHabitacion().getNumero());
-            gestorHabitacion.liberarHabitaciones(habitacion);
+            gestorHabitacion.liberarHabitaciones(
+                    Collections.singleton(reserva.getHabitacion().getNumero())
+            );
         }
 
-        // Eliminar la reserva
+        // Eliminar la reserva (el DAO también maneja el cambio de estado)
         reservaDAO.eliminar(id);
     }
 
@@ -243,11 +201,9 @@ public class GestorReserva {
      */
     public Reserva buscarReservaPorHabitacionYFecha(Integer numeroHabitacion, LocalDate fecha) {
         try {
-            List<Reserva> reservas = reservaDAO.obtenerTodas();
+            List<Reserva> reservas = reservaDAO.obtenerPorHabitacion(numeroHabitacion);
 
             return reservas.stream()
-                    .filter(r -> r.getHabitacion() != null &&
-                            r.getHabitacion().getNumero().equals(numeroHabitacion))
                     .filter(r -> !fecha.isBefore(r.getFechaInicio()) &&
                             !fecha.isAfter(r.getFechaFin()))
                     .findFirst()
@@ -262,11 +218,9 @@ public class GestorReserva {
      * Busca reservas activas (sin estadía) por habitación
      */
     public List<ReservaDTO> buscarReservasActivasPorHabitacion(Integer numeroHabitacion) {
-        List<Reserva> todasReservas = reservaDAO.obtenerTodas();
+        List<Reserva> reservas = reservaDAO.obtenerPorHabitacion(numeroHabitacion);
 
-        return todasReservas.stream()
-                .filter(r -> r.getHabitacion() != null &&
-                        r.getHabitacion().getNumero().equals(numeroHabitacion))
+        return reservas.stream()
                 .filter(r -> r.getEstadia() == null) // Sin estadía = reserva activa
                 .map(this::toDTO)
                 .collect(Collectors.toList());
@@ -274,31 +228,35 @@ public class GestorReserva {
 
     /**
      * Convierte una entidad Reserva a DTO.
-     * Nota: Una Reserva tiene UNA habitación (no un Set)
      */
     private ReservaDTO toDTO(Reserva reserva) {
         return ReservaDTO.builder()
                 .id(reserva.getId())
-                .idPersona(reserva.getPersona().getId())
-                .nombrePersona(reserva.getPersona().getNombre())
-                .apellidoPersona(reserva.getPersona().getApellido())
-                .telefonoPersona(reserva.getPersona().getTelefono())
+                .idHuesped(reserva.getHuesped().getId())
+                .nombreHuesped(reserva.getHuesped().getNombre())
+                .apellidoHuesped(reserva.getHuesped().getApellido())
+                .telefonoHuesped(reserva.getHuesped().getTelefono())
                 .fechaInicio(reserva.getFechaInicio())
                 .fechaFin(reserva.getFechaFin())
                 .cantHuespedes(reserva.getCantHuespedes())
                 .descuento(reserva.getDescuento())
-                .numerosHabitaciones(
-                        // Una reserva tiene UNA habitación
-                        Collections.singleton(reserva.getHabitacion().getNumero())
-                )
+                .numeroHabitacion(reserva.getHabitacion().getNumero())
                 .tieneEstadia(reserva.getEstadia() != null)
                 .build();
     }
 
     /**
-     * Valida los datos del DTO de reserva
+     * Valida los datos del DTO para crear reserva
      */
-    private void validarReservaDTO(ReservaDTO dto) {
+    private void validarCrearReservaDTO(CrearReservaDTO dto) {
+        if (dto.getIdHuesped() == null) {
+            throw new IllegalArgumentException("El ID del huésped es obligatorio");
+        }
+
+        if (dto.getNumeroHabitacion() == null) {
+            throw new IllegalArgumentException("El número de habitación es obligatorio");
+        }
+
         if (dto.getFechaInicio() == null) {
             throw new IllegalArgumentException("La fecha de inicio es obligatoria");
         }
@@ -317,20 +275,6 @@ public class GestorReserva {
             throw new IllegalArgumentException(
                     "La fecha de inicio no puede ser anterior a hoy"
             );
-        }
-
-        if (dto.getNumerosHabitaciones() == null || dto.getNumerosHabitaciones().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Debe seleccionar al menos una habitación"
-            );
-        }
-
-        if (dto.getNombrePersona() == null || dto.getNombrePersona().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre de la persona es obligatorio");
-        }
-
-        if (dto.getApellidoPersona() == null || dto.getApellidoPersona().trim().isEmpty()) {
-            throw new IllegalArgumentException("El apellido de la persona es obligatorio");
         }
     }
 }

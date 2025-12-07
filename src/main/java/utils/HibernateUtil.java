@@ -1,4 +1,4 @@
-package ar.utn.hotel.utils;
+package utils;
 
 import lombok.Getter;
 import org.hibernate.SessionFactory;

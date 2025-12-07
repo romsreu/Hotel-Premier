@@ -1,13 +1,14 @@
-package ar.utn.hotel.dao;
+package ar.utn.hotel.dao.interfaces;
 
 import ar.utn.hotel.model.EstadoHabitacion;
-import ar.utn.hotel.model.Habitacion;
 import enums.EstadoHab;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface EstadoHabitacionDAO {
-    EstadoHabitacion guardar(EstadoHabitacion estadoHabitacion);
+    EstadoHabitacion guardar(EstadoHabitacion estado);
     EstadoHabitacion buscarPorId(Integer id);
     List<EstadoHabitacion> listarTodos();
     List<EstadoHabitacion> listarPorHabitacion(Integer numeroHabitacion);
@@ -17,4 +18,7 @@ public interface EstadoHabitacionDAO {
     EstadoHabitacion obtenerEstadoEn(Integer numeroHabitacion, LocalDate fecha);
     void actualizar(EstadoHabitacion estadoHabitacion);
     void eliminar(Integer id);
+    Map<String, EstadoHab> obtenerEstadosEnRango(List<Integer> numerosHabitaciones,
+                                                 LocalDate fechaInicio,
+                                                 LocalDate fechaFin);
 }

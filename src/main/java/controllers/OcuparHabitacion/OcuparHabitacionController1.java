@@ -1,11 +1,11 @@
 package controllers.OcuparHabitacion;
 
 import ar.utn.hotel.HotelPremier;
+import ar.utn.hotel.dto.HuespedDTO;
 import ar.utn.hotel.gestor.GestorHuesped;
 import ar.utn.hotel.model.Huesped;
 import controllers.PopUp.PopUpController;
 import enums.PopUpType;
-import enums.TipoDocumento;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -17,12 +17,8 @@ import static utils.TextManager.*;
 
 public class OcuparHabitacionController1 {
 
-    @FXML private RadioButton rbHuesped;
-    @FXML private RadioButton rbAcompanante;
-    @FXML private ToggleGroup tgTipoPersona;
     @FXML private TextField tfNombre;
     @FXML private TextField tfApellido;
-    @FXML private ComboBox<TipoDocumento> cbTipoDocumento;
     @FXML private TextField tfNumeroDocumento;
     @FXML private Button btnCancelar;
     @FXML private Button btnAceptar;
@@ -45,8 +41,6 @@ public class OcuparHabitacionController1 {
         }
 
         configurarCampos();
-        configurarRadioButtons();
-        cargarTiposDocumento();
     }
 
     private void configurarCampos() {
@@ -55,35 +49,6 @@ public class OcuparHabitacionController1 {
         soloNumeros(tfNumeroDocumento);
         limitarCaracteres(15, tfNombre, tfApellido);
         aplicarMascaraDNI(tfNumeroDocumento);
-    }
-
-    private void configurarRadioButtons() {
-        rbHuesped.setSelected(true);
-        habilitarCamposDNI(true);
-
-        tgTipoPersona.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == rbHuesped) {
-                habilitarCamposDNI(true);
-            } else if (newVal == rbAcompanante) {
-                habilitarCamposDNI(false);
-                limpiarCamposDNI();
-            }
-        });
-    }
-
-    private void habilitarCamposDNI(boolean habilitar) {
-        cbTipoDocumento.setDisable(!habilitar);
-        tfNumeroDocumento.setDisable(!habilitar);
-    }
-
-    private void limpiarCamposDNI() {
-        cbTipoDocumento.setValue(null);
-        tfNumeroDocumento.clear();
-    }
-
-    private void cargarTiposDocumento() {
-        cbTipoDocumento.getItems().addAll(TipoDocumento.values());
-        cbTipoDocumento.setValue(TipoDocumento.DNI);
     }
 
     @FXML
@@ -96,65 +61,42 @@ public class OcuparHabitacionController1 {
     public void onAceptarClicked(ActionEvent actionEvent) {
         String nombre = tfNombre.getText().trim();
         String apellido = tfApellido.getText().trim();
+        String numeroDocumento = tfNumeroDocumento.getText().trim();
 
+        // Validar que al menos tenga nombre y apellido
         if (nombre.isEmpty() || apellido.isEmpty()) {
             PopUpController.mostrarPopUp(
                     PopUpType.WARNING,
-                    "Debe ingresar nombre y apellido"
+                    "Debe ingresar al menos nombre y apellido del huésped"
             );
             return;
         }
 
-        if (rbHuesped.isSelected()) {
-            buscarHuespedes(nombre, apellido);
-        } else if (rbAcompanante.isSelected()) {
-            buscarAcompanantes(nombre, apellido);
-        }
-    }
-    private void buscarAcompanantes(String nombre, String apellido) {
-        try {
-            // Los acompañantes no requieren DNI, solo nombre y apellido
-            List<Huesped> personas = gestorHuesped.buscarPersonaPorNombreApellido(nombre, apellido);
-
-            if (personas == null || personas.isEmpty()) {
-                PopUpController.mostrarPopUp(
-                        PopUpType.WARNING,
-                        "No se encontraron personas con esos datos"
-                );
-                return;
-            }
-
-            // Guardar resultados y pasar a la siguiente pantalla
-            DataTransfer.setHuespedesEnBusqueda(personas);
-            HotelPremier.cambiarA("ocupar_hab2");
-
-        } catch (Exception e) {
-            PopUpController.mostrarPopUp(
-                    PopUpType.ERROR,
-                    "Error al buscar personas:\n" + e.getMessage()
-            );
-            e.printStackTrace();
-        }
+        buscarHuespedes(nombre, apellido, numeroDocumento);
     }
 
-    private void buscarHuespedes(String nombre, String apellido) {
-        String numeroDocumento = tfNumeroDocumento.getText().trim();
-
+    private void buscarHuespedes(String nombre, String apellido, String numeroDocumento) {
         try {
-            List<Huesped> huespedes;
+            // Crear DTO con los criterios de búsqueda
+            HuespedDTO.HuespedDTOBuilder builder = HuespedDTO.builder()
+                    .nombre(nombre)
+                    .apellido(apellido);
 
+            // Agregar número de documento solo si se ingresó
             if (!numeroDocumento.isEmpty()) {
-                // Buscar por nombre, apellido Y DNI
-                huespedes = gestorHuesped.buscarPorNombreApellidoDNI(nombre, apellido, numeroDocumento);
-            } else {
-                // Buscar solo por nombre y apellido
-                huespedes = gestorHuesped.buscarPorNombreApellido(nombre, apellido);
+                builder.numeroDocumento(numeroDocumento);
             }
+
+            HuespedDTO dto = builder.build();
+
+            // Buscar huéspedes usando el gestor
+            List<Huesped> huespedes = gestorHuesped.buscarHuesped(dto);
 
             if (huespedes == null || huespedes.isEmpty()) {
                 PopUpController.mostrarPopUp(
                         PopUpType.WARNING,
-                        "No se encontraron huéspedes con esos datos"
+                        "No se encontraron huéspedes con esos datos.\n\n" +
+                                "Asegúrese de que el huésped esté registrado en el sistema."
                 );
                 return;
             }

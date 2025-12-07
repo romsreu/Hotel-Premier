@@ -2,11 +2,8 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -28,33 +25,6 @@
             <children>
                 <VBox alignment="CENTER" maxWidth="500.0" spacing="15.0">
                     <children>
-                        <HBox alignment="CENTER" maxWidth="500.0" spacing="40.0">
-                            <children>
-                                <HBox alignment="CENTER" spacing="8.0">
-                                    <RadioButton fx:id="rbHuesped" mnemonicParsing="false" selected="true" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Huésped">
-                                        <font>
-                                            <Font name="Lucida Bright" size="16.0" />
-                                        </font>
-                                        <cursor>
-                                            <Cursor fx:constant="HAND" />
-                                        </cursor>
-                                        <toggleGroup>
-                                            <ToggleGroup fx:id="tgTipoPersona" />
-                                        </toggleGroup>
-                                    </RadioButton>
-                                </HBox>
-                                <HBox alignment="CENTER" spacing="8.0">
-                                    <RadioButton fx:id="rbAcompanante" mnemonicParsing="false" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Acompañante" toggleGroup="$tgTipoPersona">
-                                        <font>
-                                            <Font name="Lucida Bright" size="16.0" />
-                                        </font>
-                                        <cursor>
-                                            <Cursor fx:constant="HAND" />
-                                        </cursor>
-                                    </RadioButton>
-                                </HBox>
-                            </children>
-                        </HBox>
                         <VBox alignment="CENTER" maxWidth="500.0">
                             <children>
                                 <Label maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Nombre">
@@ -83,22 +53,13 @@
                                 </TextField>
                             </children>
                         </VBox>
-                        <VBox alignment="CENTER" maxWidth="500.0">
+                        <VBox alignment="CENTER" maxWidth="500.0" spacing="8.0">
                             <children>
-                                <Label alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Tipo de Documento">
+                                <Label maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Número de Documento (Opcional)">
                                     <font>
                                         <Font name="Lucida Bright" size="16.0" />
                                     </font>
                                 </Label>
-                                <ComboBox fx:id="cbTipoDocumento" maxWidth="500.0" promptText="DNI" stylesheets="@../../../styles/campos.css">
-                                    <cursor>
-                                        <Cursor fx:constant="HAND" />
-                                    </cursor>
-                                </ComboBox>
-                            </children>
-                        </VBox>
-                        <VBox alignment="CENTER" maxWidth="500.0" spacing="8.0">
-                            <children>
                                 <TextField fx:id="tfNumeroDocumento" maxWidth="500.0" promptText="Ingrese el número de DNI" stylesheets="@../../../styles/campos.css">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />

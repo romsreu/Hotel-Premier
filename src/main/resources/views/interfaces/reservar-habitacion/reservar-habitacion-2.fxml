@@ -123,7 +123,7 @@
                         </VBox>
 
                         <!-- Nota informativa -->
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Si la persona no existe, se creará automáticamente" wrapText="true">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="El huésped debe estar dado de alta para reservar" wrapText="true">
                             <font>
                                 <Font name="Lucida Bright" size="11.0" />
                             </font>

@@ -5,7 +5,6 @@ import ar.utn.hotel.dto.HabitacionReservaDTO;
 import ar.utn.hotel.gestor.GestorHabitacion;
 import ar.utn.hotel.gestor.GestorReserva;
 import ar.utn.hotel.model.Habitacion;
-import ar.utn.hotel.model.EstadoHabitacion;
 import ar.utn.hotel.model.Reserva;
 import controllers.PopUp.PopUpController;
 import enums.ContextoEstadoHabitaciones;
@@ -33,6 +32,7 @@ public class EstadoHabitacionesController2 {
     @FXML private Label lbFechaDesde;
     @FXML private Label lbFechaHasta;
     @FXML private Label lblTitulo;
+    private Map<String, EstadoHab> cacheEstados;
 
     private GridPane gridTodasHabitaciones, gridIndividualEstandar, gridDobleEstandar,
             gridDobleSuperior, gridSuperiorFamily, gridSuiteDoble;
@@ -57,6 +57,7 @@ public class EstadoHabitacionesController2 {
     public void initialize() {
         mapaCeldas = new HashMap<>();
         celdasSeleccionadas = new HashSet<>();
+        cacheEstados = new HashMap<>();
         gestorHabitacion = new GestorHabitacion();
         gestorReserva = new GestorReserva();
         gestorReserva.setGestorHabitacion(gestorHabitacion);
@@ -170,6 +171,14 @@ public class EstadoHabitacionesController2 {
             mostrarError("No hay habitaciones registradas en el sistema");
             return;
         }
+
+        List<Integer> numerosHab = todasLasHabitaciones.stream()
+                .map(Habitacion::getNumero)
+                .collect(Collectors.toList());
+
+        cacheEstados = gestorHabitacion.obtenerEstadosEnRango(numerosHab, fechaInicio, fechaFin);
+
+        // Ahora cargar las grillas (ya no hacen consultas individuales)
         cargarGrilla(gridTodasHabitaciones, fechaInicio, fechaFin, todasLasHabitaciones);
         cargarGrillaPorTipo(gridIndividualEstandar, TipoHabitacion.INDIVIDUAL_ESTANDAR);
         cargarGrillaPorTipo(gridDobleEstandar, TipoHabitacion.DOBLE_ESTANDAR);
@@ -178,11 +187,17 @@ public class EstadoHabitacionesController2 {
         cargarGrillaPorTipo(gridSuiteDoble, TipoHabitacion.SUITE_DOBLE);
     }
 
+
     private void cargarGrillaPorTipo(GridPane grid, TipoHabitacion tipo) {
-        /*List<Habitacion> habitacionesTipo = todasLasHabitaciones.stream()
-                .filter(h -> h.getTipo() != null && h.getTipo().getNombre().equals(tipo.getDisplayName()))
-                .collect(Collectors.toList());*/
-       // cargarGrilla(grid, fechaInicio, fechaFin, habitacionesTipo);
+        // Obtener el nombre del enum y compararlo
+        String nombreTipo = tipo.name().replace("_", " "); // Ej: "DOBLE_ESTANDAR" → "DOBLE ESTANDAR"
+
+        List<Habitacion> habitacionesTipo = todasLasHabitaciones.stream()
+                .filter(h -> h.getTipo() != null &&
+                        h.getTipo().getNombre().toUpperCase().contains(nombreTipo))
+                .collect(Collectors.toList());
+
+        cargarGrilla(grid, fechaInicio, fechaFin, habitacionesTipo);
     }
 
     private void cargarGrilla(GridPane grid, LocalDate inicio, LocalDate fin, List<Habitacion> habitaciones) {
@@ -250,13 +265,12 @@ public class EstadoHabitacionesController2 {
     }
 
     /**
-     * CORREGIDO: Obtiene el estado de una habitación en una fecha específica
+     * Obtiene el estado de una habitación en una fecha específica
      * usando el nuevo modelo EstadoHabitacion -> TipoEstado
      */
     private EstadoHab obtenerEstadoHabitacion(Habitacion habitacion, LocalDate fecha) {
-        // Usar el método del gestor que consulta el DAO
-        EstadoHab estado = gestorHabitacion.obtenerEstadoEn(habitacion.getNumero(), fecha);
-        return estado != null ? estado : EstadoHab.DISPONIBLE;
+        String clave = habitacion.getNumero() + "_" + fecha;
+        return cacheEstados.getOrDefault(clave, EstadoHab.DISPONIBLE);
     }
 
     private StackPane crearCeldaEncabezado(String texto) {
@@ -408,10 +422,13 @@ public class EstadoHabitacionesController2 {
 
             mensaje.append(String.format("🏨 HABITACIÓN %d\n", numHab));
             if (reserva != null) {
-                mensaje.append(String.format("   Cliente: %s %s\n", reserva.getPersona().getNombre(),
-                        reserva.getPersona().getApellido()));
+                // ✅ CAMBIO AQUÍ: .getPersona() → .getHuesped()
+                mensaje.append(String.format("   Cliente: %s %s\n",
+                        reserva.getHuesped().getNombre(),
+                        reserva.getHuesped().getApellido()));
                 mensaje.append(String.format("   Reserva: %s - %s\n",
-                        reserva.getFechaInicio().format(formatter), reserva.getFechaFin().format(formatter)));
+                        reserva.getFechaInicio().format(formatter),
+                        reserva.getFechaFin().format(formatter)));
             } else {
                 mensaje.append("   (Reserva no encontrada en sistema)\n");
             }

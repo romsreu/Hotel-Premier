@@ -1,12 +1,13 @@
 package controllers.OcuparHabitacion;
 
 import ar.utn.hotel.HotelPremier;
+import ar.utn.hotel.dto.CrearReservaDTO;
 import ar.utn.hotel.dto.HabitacionReservaDTO;
+import ar.utn.hotel.dto.ReservaDTO;
 import ar.utn.hotel.gestor.GestorHabitacion;
 import ar.utn.hotel.gestor.GestorReserva;
 import ar.utn.hotel.model.Huesped;
 import ar.utn.hotel.model.Reserva;
-import ar.utn.hotel.dao.ReservaDAO;
 import controllers.PopUp.PopUpController;
 import enums.PopUpType;
 import javafx.event.ActionEvent;
@@ -197,39 +198,55 @@ public class OcuparHabitacionController2 {
 
     private void procesarOcupacion() {
         try {
+            List<Long> reservasCreadas = new ArrayList<>();
+
             // Por cada habitación seleccionada, procesar la ocupación
             for (HabitacionReservaDTO hab : habitacionesSeleccionadas) {
                 // 1. Buscar si existe una reserva para esta habitación en estas fechas
-                Reserva reserva = gestorReserva.buscarReservaPorHabitacionYFecha(
+                Reserva reservaExistente = gestorReserva.buscarReservaPorHabitacionYFecha(
                         hab.getNumeroHabitacion(),
                         hab.getFechaIngreso()
                 );
 
-                if (reserva == null) {
+                Long idReserva;
+
+                if (reservaExistente == null) {
                     // NO existe reserva: Crear reserva primero
-                    Map<Integer, ReservaDAO.RangoFechas> habitacionConFechas = new HashMap<>();
-                    habitacionConFechas.put(
-                            hab.getNumeroHabitacion(),
-                            new ReservaDAO.RangoFechas(hab.getFechaIngreso(), hab.getFechaEgreso())
-                    );
+                    CrearReservaDTO dtoReserva = CrearReservaDTO.builder()
+                            .idHuesped(huespedSeleccionado.getId())
+                            .numeroHabitacion(hab.getNumeroHabitacion())
+                            .fechaInicio(hab.getFechaIngreso())
+                            .fechaFin(hab.getFechaEgreso())
+                            .cantHuespedes(1) // Por defecto 1
+                            .descuento(0.0)
+                            .build();
 
-                    // Crear la reserva
-                    gestorReserva.crearReservasConFechasEspecificas(
-                            huespedSeleccionado.getNombre(),
-                            huespedSeleccionado.getApellido(),
-                            habitacionConFechas
-                    );
+                    ReservaDTO reserva = gestorReserva.crearReserva(dtoReserva);
+                    idReserva = reserva.getId();
 
-                    // Obtener la reserva recién creada
-                    reserva = gestorReserva.buscarReservaPorHabitacionYFecha(
-                            hab.getNumeroHabitacion(),
-                            hab.getFechaIngreso()
-                    );
+                    // Delay entre operaciones
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else {
+                    // Ya existe reserva
+                    idReserva = reservaExistente.getId();
                 }
 
-                // 2. Crear la estadía (hacer check-in)
-                if (reserva != null) {
-                    gestorHabitacion.realizarCheckIn(reserva.getId());
+                reservasCreadas.add(idReserva);
+            }
+
+            // 2. Hacer check-in en todas las reservas (crear estadías)
+            for (Long idReserva : reservasCreadas) {
+                gestorHabitacion.realizarCheckIn(idReserva);
+
+                // Delay entre operaciones
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
 

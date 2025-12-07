@@ -1,9 +1,9 @@
-package ar.utn.hotel.dao.impl;
+package ar.utn.hotel.dao.implement;
 
-import ar.utn.hotel.dao.EstadiaDAO;
+import ar.utn.hotel.dao.interfaces.EstadiaDAO;
 import ar.utn.hotel.model.Estadia;
 import ar.utn.hotel.model.Reserva;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.time.LocalDate;
@@ -34,7 +34,7 @@ public class EstadiaDAOImpl implements EstadiaDAO {
             return session.createQuery(
                             "SELECT e FROM Estadia e " +
                                     "LEFT JOIN FETCH e.reserva r " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "LEFT JOIN FETCH e.habitacion " +
                                     "WHERE e.idEstadia = :id",
                             Estadia.class)
@@ -62,7 +62,7 @@ public class EstadiaDAOImpl implements EstadiaDAO {
             return session.createQuery(
                             "SELECT DISTINCT e FROM Estadia e " +
                                     "LEFT JOIN FETCH e.reserva r " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "LEFT JOIN FETCH e.habitacion " +
                                     "ORDER BY e.fechaInicio DESC",
                             Estadia.class)
@@ -76,7 +76,7 @@ public class EstadiaDAOImpl implements EstadiaDAO {
             return session.createQuery(
                             "SELECT DISTINCT e FROM Estadia e " +
                                     "LEFT JOIN FETCH e.reserva r " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "LEFT JOIN FETCH e.habitacion " +
                                     "WHERE e.horaCheckOut IS NULL " +
                                     "ORDER BY e.fechaInicio DESC",
@@ -91,7 +91,7 @@ public class EstadiaDAOImpl implements EstadiaDAO {
             return session.createQuery(
                             "SELECT DISTINCT e FROM Estadia e " +
                                     "LEFT JOIN FETCH e.reserva r " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "WHERE e.habitacion.numero = :numero " +
                                     "ORDER BY e.fechaInicio DESC",
                             Estadia.class)
@@ -106,7 +106,7 @@ public class EstadiaDAOImpl implements EstadiaDAO {
             return session.createQuery(
                             "SELECT DISTINCT e FROM Estadia e " +
                                     "LEFT JOIN FETCH e.reserva r " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "LEFT JOIN FETCH e.habitacion " +
                                     "WHERE e.fechaInicio <= :fechaFin " +
                                     "AND e.fechaFin >= :fechaInicio " +

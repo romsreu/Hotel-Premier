@@ -1,14 +1,12 @@
 package controllers.ReservarHabitacion;
 
 import ar.utn.hotel.HotelPremier;
-import ar.utn.hotel.dao.ReservaDAO;
-import ar.utn.hotel.dao.impl.EstadoHabitacionDAOImpl;
-import ar.utn.hotel.dao.impl.PersonaDAOImpl;
-import ar.utn.hotel.dao.impl.ReservaDAOImpl;
+import ar.utn.hotel.dto.CrearReservaDTO;
 import ar.utn.hotel.dto.HabitacionReservaDTO;
 import ar.utn.hotel.dto.ReservaDTO;
+import ar.utn.hotel.gestor.GestorHuesped;
 import ar.utn.hotel.gestor.GestorReserva;
-import ar.utn.hotel.model.Persona;
+import ar.utn.hotel.model.Huesped;
 import controllers.PopUp.PopUpController;
 import enums.PopUpType;
 import javafx.event.ActionEvent;
@@ -20,9 +18,8 @@ import utils.DataTransfer;
 import utils.Validator;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static utils.TextManager.*;
 
@@ -41,17 +38,15 @@ public class ReservarHabitacionController2 {
     @FXML private ImageView telefonoO;
 
     private Validator validator;
-    private PersonaDAOImpl personaDAO;
+    private GestorHuesped gestorHuesped;
     private GestorReserva gestorReserva;
     private List<HabitacionReservaDTO> habitacionesSeleccionadas;
 
     @FXML
     public void initialize() {
-        // Inicializar DAOs y gestor
-        personaDAO = new PersonaDAOImpl();
-        EstadoHabitacionDAOImpl estadoDAO = new EstadoHabitacionDAOImpl();
-        //ReservaDAO reservaDAO = new ReservaDAOImpl(personaDAO, estadoDAO);
-        //gestorReserva = new GestorReserva(reservaDAO, personaDAO);
+        // Inicializar gestores
+        gestorHuesped = new GestorHuesped();
+        gestorReserva = new GestorReserva();
 
         // Obtener habitaciones seleccionadas
         habitacionesSeleccionadas = DataTransfer.getHabitacionesSeleccionadas();
@@ -92,7 +87,6 @@ public class ReservarHabitacionController2 {
         validator.addRule(tfNombre, nombreO).required().minLength(2);
         validator.addRule(tfApellido, apellidoO).required().minLength(2);
         validator.addRule(tfTelefono, telefonoO).required().minLength(7);
-
     }
 
     private void ocultarIconosValidacion() {
@@ -111,7 +105,7 @@ public class ReservarHabitacionController2 {
                 confirmado -> {
                     if (confirmado) {
                         DataTransfer.limpiar();
-                       // HotelPremier.cambiarA("menu");
+                        HotelPremier.cambiarA("menu");
                     }
                 }
         );
@@ -131,7 +125,7 @@ public class ReservarHabitacionController2 {
                     "Complete los campos obligatorios correctamente:\n\n" +
                             "• Nombre (mínimo 2 caracteres)\n" +
                             "• Apellido (mínimo 2 caracteres)\n" +
-                            "• Teléfono (opcional, mínimo 7 dígitos)"
+                            "• Teléfono (mínimo 7 dígitos)"
             );
             return;
         }
@@ -140,7 +134,7 @@ public class ReservarHabitacionController2 {
         String apellido = tfApellido.getText().trim();
         String telefono = tfTelefono.getText().trim();
 
-        // Buscar si la persona existe
+        // Buscar si el huésped existe
         verificarYConfirmarReserva(nombre, apellido, telefono);
     }
 
@@ -148,10 +142,20 @@ public class ReservarHabitacionController2 {
 
     private void verificarYConfirmarReserva(String nombre, String apellido, String telefono) {
         try {
-            // Buscar si la persona existe en BD
-            Persona personaExistente = personaDAO.buscarPorNombreApellido(nombre, apellido);
+            // Buscar si el huésped existe en BD
+            List<Huesped> huespedesEncontrados = gestorHuesped.buscarPorNombreApellido(nombre, apellido);
 
-            boolean existe = (personaExistente != null);
+            // Hacer la variable final para poder usarla en el lambda
+            final Huesped huespedExistente;
+            if (!huespedesEncontrados.isEmpty()) {
+                // Si hay múltiples con el mismo nombre, tomar el primero
+                // (en una aplicación real, deberías mostrar una lista para que el usuario elija)
+                huespedExistente = huespedesEncontrados.get(0);
+            } else {
+                huespedExistente = null;
+            }
+
+            boolean existe = (huespedExistente != null);
 
             // Construir mensaje de confirmación
             String mensaje = construirMensajeConfirmacion(nombre, apellido, telefono, existe);
@@ -162,7 +166,7 @@ public class ReservarHabitacionController2 {
                     mensaje,
                     confirmado -> {
                         if (confirmado) {
-                            procesarReserva(nombre, apellido, telefono, existe);
+                            procesarReserva(nombre, apellido, telefono, huespedExistente);
                         }
                     }
             );
@@ -170,7 +174,7 @@ public class ReservarHabitacionController2 {
         } catch (Exception e) {
             PopUpController.mostrarPopUp(
                     PopUpType.ERROR,
-                    "Error al verificar la persona:\n" + e.getMessage()
+                    "Error al verificar el huésped:\n" + e.getMessage()
             );
             e.printStackTrace();
         }
@@ -181,7 +185,7 @@ public class ReservarHabitacionController2 {
         double costoTotal = calcularCostoTotal();
         int totalNoches = calcularTotalNoches();
 
-        String estadoPersona = existe ? "✓ PERSONA EXISTENTE" : "⚠ NUEVA PERSONA (se creará)";
+        String estadoHuesped = existe ? "✓ HUÉSPED EXISTENTE" : "⚠ NUEVO HUÉSPED (se usará huésped existente o debe registrarse)";
 
         return String.format(
                 "¿Confirmar reserva?\n\n" +
@@ -190,7 +194,7 @@ public class ReservarHabitacionController2 {
                         "RESUMEN DE RESERVA:\n" +
                         "• Habitaciones: %d\n" +
                         "• Total noches: %d\n" +
-                        "• Costo total: $%.2f\n" +
+                        "• Costo total: $%.2f\n\n" +
                         "%s",
                 nombre,
                 apellido,
@@ -198,37 +202,41 @@ public class ReservarHabitacionController2 {
                 habitacionesSeleccionadas.size(),
                 totalNoches,
                 costoTotal,
-                estadoPersona
+                estadoHuesped
         );
-
     }
 
-    private void procesarReserva(String nombre, String apellido, String telefono, boolean existe) {
+    private void procesarReserva(String nombre, String apellido, String telefono, Huesped huespedExistente) {
         try {
-            // Si la persona NO existe, crearla primero
-            if (!existe) {
-                crearPersona(nombre, apellido, telefono);
-            }
-
-            // Convertir habitaciones seleccionadas a Map<Integer, RangoFechas>
-            Map<Integer, ReservaDAO.RangoFechas> habitacionesConFechas = new HashMap<>();
-
-            for (HabitacionReservaDTO hab : habitacionesSeleccionadas) {
-                habitacionesConFechas.put(
-                        hab.getNumeroHabitacion(),
-                        new ReservaDAO.RangoFechas(hab.getFechaIngreso(), hab.getFechaEgreso())
+            // Validar que el huésped exista (ya debe estar registrado en el sistema)
+            if (huespedExistente == null) {
+                PopUpController.mostrarPopUp(
+                        PopUpType.WARNING,
+                        "El huésped no está registrado en el sistema.\n\n" +
+                                "Debe dar de alta al huésped antes de realizar una reserva.\n" +
+                                "Use la opción 'Dar de alta huésped' del menú principal."
                 );
+                return;
             }
 
-            // Crear las reservas usando el gestor
-            List<ReservaDTO> reservasCreadas = gestorReserva.crearReservasConFechasEspecificas(
-                    nombre,
-                    apellido,
-                    habitacionesConFechas
-            );
+            // Crear lista de DTOs
+            List<CrearReservaDTO> dtosReservas = new ArrayList<>();
+            for (HabitacionReservaDTO hab : habitacionesSeleccionadas) {
+                dtosReservas.add(CrearReservaDTO.builder()
+                        .idHuesped(huespedExistente.getId())
+                        .numeroHabitacion(hab.getNumeroHabitacion())
+                        .fechaInicio(hab.getFechaIngreso())
+                        .fechaFin(hab.getFechaEgreso())
+                        .cantHuespedes(1)
+                        .descuento(0.0)
+                        .build());
+            }
+
+            // Crear todas las reservas de una vez
+            List<ReservaDTO> reservasCreadas = gestorReserva.crearReservasMultiples(dtosReservas);
 
             // Mostrar confirmación exitosa
-            mostrarConfirmacionExitosa(reservasCreadas, nombre, apellido, telefono, existe);
+            mostrarConfirmacionExitosa(reservasCreadas, nombre, apellido, telefono, true);
 
         } catch (Exception e) {
             PopUpController.mostrarPopUp(
@@ -239,34 +247,17 @@ public class ReservarHabitacionController2 {
         }
     }
 
-    private void crearPersona(String nombre, String apellido, String telefono) {
-        try {
-            Persona nuevaPersona = Persona.builder()
-                    .nombre(nombre)
-                    .apellido(apellido)
-                    .telefono(telefono.isEmpty() ? null : telefono)
-                    .build();
-
-            personaDAO.guardar(nuevaPersona);
-
-            System.out.println("✓ Nueva persona creada: " + nombre + " " + apellido);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error al crear la persona: " + e.getMessage(), e);
-        }
-    }
-
     private void mostrarConfirmacionExitosa(List<ReservaDTO> reservasCreadas, String nombre,
                                             String apellido, String telefono, boolean existia) {
         double costoTotal = calcularCostoTotal();
         int totalNoches = calcularTotalNoches();
 
-        String estadoPersona = existia ? "EXISTENTE" : "CREADA";
+        String estadoHuesped = existia ? "EXISTENTE" : "NUEVO";
 
         StringBuilder mensaje = new StringBuilder();
         mensaje.append("✓ RESERVA CONFIRMADA EXITOSAMENTE\n\n");
         mensaje.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
-        mensaje.append(String.format("Cliente: %s %s (%s)\n", nombre, apellido, estadoPersona));
+        mensaje.append(String.format("Cliente: %s %s (%s)\n", nombre, apellido, estadoHuesped));
         mensaje.append(String.format("Teléfono: %s\n\n",
                 telefono.isEmpty() ? "No especificado" : telefono));
         mensaje.append("RESUMEN:\n");
@@ -293,7 +284,7 @@ public class ReservarHabitacionController2 {
                     DataTransfer.limpiar();
 
                     // Mostrar resumen en consola
-                    mostrarResumenEnConsola(reservasCreadas, nombre, apellido, telefono, estadoPersona);
+                    mostrarResumenEnConsola(reservasCreadas, nombre, apellido, telefono, estadoHuesped);
 
                     // Volver al menú
                     HotelPremier.cambiarA("menu");
@@ -314,11 +305,11 @@ public class ReservarHabitacionController2 {
     }
 
     private void mostrarResumenEnConsola(List<ReservaDTO> reservasCreadas, String nombre,
-                                         String apellido, String telefono, String estadoPersona) {
+                                         String apellido, String telefono, String estadoHuesped) {
         System.out.println("\n" + "=".repeat(60));
         System.out.println("          RESERVA CONFIRMADA - RESUMEN");
         System.out.println("=".repeat(60));
-        System.out.printf("Cliente: %s %s (%s)%n", nombre, apellido, estadoPersona);
+        System.out.printf("Cliente: %s %s (%s)%n", nombre, apellido, estadoHuesped);
         System.out.printf("Teléfono: %s%n", telefono.isEmpty() ? "No especificado" : telefono);
         System.out.println("-".repeat(60));
         System.out.printf("Total de reservas creadas: %d%n", reservasCreadas.size());
@@ -327,7 +318,7 @@ public class ReservarHabitacionController2 {
         System.out.println("-".repeat(60));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        for (int i = 0; i < habitacionesSeleccionadas.size(); i++) {
+        for (int i = 0; i < habitacionesSeleccionadas.size() && i < reservasCreadas.size(); i++) {
             HabitacionReservaDTO hab = habitacionesSeleccionadas.get(i);
             ReservaDTO reserva = reservasCreadas.get(i);
 

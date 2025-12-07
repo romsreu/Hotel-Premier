@@ -13,8 +13,8 @@ module ar.utn.hotel.hotel_premier {
 
 
     opens ar.utn.hotel.model to org.hibernate.orm.core;
-    opens ar.utn.hotel.dto to org.hibernate.orm.core;
-    opens ar.utn.hotel.dao to org.hibernate.orm.core;
+    opens ar.utn.hotel.dao.implement to org.hibernate.orm.core;
+    opens ar.utn.hotel.dao.interfaces to org.hibernate.orm.core;
     opens ar.utn.hotel to javafx.fxml;
     opens controllers.BuscarHuesped to javafx.fxml;
     opens controllers.EstadoHabitaciones to javafx.fxml;

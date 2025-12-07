@@ -1,8 +1,8 @@
-package ar.utn.hotel.dao.impl;
+package ar.utn.hotel.dao.implement;
 
-import ar.utn.hotel.dao.TipoEstadoDAO;
+import ar.utn.hotel.dao.interfaces.TipoEstadoDAO;
 import ar.utn.hotel.model.TipoEstado;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 import enums.EstadoHab;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

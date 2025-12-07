@@ -1,4 +1,4 @@
-package ar.utn.hotel.dao;
+package ar.utn.hotel.dao.interfaces;
 
 import ar.utn.hotel.model.TipoHabitacion;
 import enums.EstadoHab;

@@ -8,16 +8,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReservaDTO {
-    private Long id;
+public class CrearReservaDTO {
     private Long idHuesped;
-    private String nombreHuesped;
-    private String apellidoHuesped;
-    private String telefonoHuesped;
     private Integer numeroHabitacion;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private Integer cantHuespedes;
     private Double descuento;
-    private Boolean tieneEstadia;
 }

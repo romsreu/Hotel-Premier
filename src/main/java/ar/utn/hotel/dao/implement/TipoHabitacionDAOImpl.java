@@ -1,8 +1,8 @@
-package ar.utn.hotel.dao.impl;
+package ar.utn.hotel.dao.implement;
 
-import ar.utn.hotel.dao.TipoHabitacionDAO;
+import ar.utn.hotel.dao.interfaces.TipoHabitacionDAO;
 import ar.utn.hotel.model.TipoHabitacion;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.List;

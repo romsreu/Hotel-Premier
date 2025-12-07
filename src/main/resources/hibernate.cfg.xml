@@ -30,7 +30,6 @@
              none → desactiva totalmente -->
 
         <!-- === Mapeo de entidades === -->
-        <mapping class="ar.utn.hotel.model.Persona"/>
         <mapping class="ar.utn.hotel.model.Direccion"/>
         <mapping class="ar.utn.hotel.model.Huesped"/>
         <mapping class="ar.utn.hotel.model.Habitacion"/>

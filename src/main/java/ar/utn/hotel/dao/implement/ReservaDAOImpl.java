@@ -1,142 +1,104 @@
-package ar.utn.hotel.dao.impl;
+package ar.utn.hotel.dao.implement;
 
-import ar.utn.hotel.dao.PersonaDAO;
-import ar.utn.hotel.dao.ReservaDAO;
-import ar.utn.hotel.dao.TipoEstadoDAO;
+import ar.utn.hotel.dao.interfaces.ReservaDAO;
+import ar.utn.hotel.dao.interfaces.TipoEstadoDAO;
+import ar.utn.hotel.dto.CrearReservaDTO;
 import ar.utn.hotel.model.*;
 import enums.EstadoHab;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import ar.utn.hotel.utils.HibernateUtil;
+import utils.HibernateUtil;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ReservaDAOImpl implements ReservaDAO {
 
-    private final PersonaDAO personaDAO;
     private final TipoEstadoDAO tipoEstadoDAO;
 
-    public ReservaDAOImpl(PersonaDAO personaDAO, TipoEstadoDAO tipoEstadoDAO) {
-        this.personaDAO = personaDAO;
+    public ReservaDAOImpl(TipoEstadoDAO tipoEstadoDAO) {
         this.tipoEstadoDAO = tipoEstadoDAO;
     }
 
     @Override
-    public List<Reserva> crearReservas(Long idPersona, Map<Integer, RangoFechas> habitacionesConFechas) {
+    public Reserva crearReserva(CrearReservaDTO dto) {
         Transaction transaction = null;
-        List<Reserva> reservasCreadas = new ArrayList<>();
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            // Verificar que la persona existe
-            Persona persona = session.get(Persona.class, idPersona);
-            if (persona == null) {
-                throw new RuntimeException("Error: La persona no se encuentra cargada en el sistema.");
+            // Verificar que el huésped existe
+            Huesped huesped = session.get(Huesped.class, dto.getIdHuesped());
+            if (huesped == null) {
+                throw new RuntimeException("Error: El huésped no se encuentra registrado en el sistema.");
             }
 
-            // Obtener el tipo estado RESERVADA del catálogo
-            TipoEstado tipoReservada = tipoEstadoDAO.buscarPorEstado(EstadoHab.RESERVADA);
+            // Obtener la habitación
+            Habitacion habitacion = session.createQuery(
+                            "SELECT DISTINCT h FROM Habitacion h " +
+                                    "LEFT JOIN FETCH h.estados " +
+                                    "WHERE h.numero = :numero",
+                            Habitacion.class)
+                    .setParameter("numero", dto.getNumeroHabitacion())
+                    .uniqueResult();
 
+            if (habitacion == null) {
+                throw new IllegalArgumentException("La habitación número " + dto.getNumeroHabitacion() + " no existe");
+            }
+
+            // Obtener el tipo estado RESERVADA
+            TipoEstado tipoReservada = tipoEstadoDAO.buscarPorEstado(EstadoHab.RESERVADA);
             if (tipoReservada == null) {
                 throw new IllegalStateException("No existe el tipo estado RESERVADA en el catálogo");
             }
 
-            // Crear UNA reserva por CADA habitación con sus fechas específicas
-            for (Map.Entry<Integer, RangoFechas> entry : habitacionesConFechas.entrySet()) {
-                Integer numeroHab = entry.getKey();
-                RangoFechas rango = entry.getValue();
-
-                // Obtener la habitación
-                Habitacion habitacion = session.createQuery(
-                                "SELECT DISTINCT h FROM Habitacion h " +
-                                        "LEFT JOIN FETCH h.estados " +
-                                        "WHERE h.numero = :numero",
-                                Habitacion.class)
-                        .setParameter("numero", numeroHab)
-                        .uniqueResult();
-
-                if (habitacion == null) {
-                    throw new IllegalArgumentException("La habitación número " + numeroHab + " no existe");
-                }
-
-                // Verificar disponibilidad
-                EstadoHabitacion estadoActual = habitacion.getEstadoActual();
-                if (estadoActual != null &&
-                        estadoActual.getTipoEstado().getEstado() != EstadoHab.DISPONIBLE) {
-                    throw new IllegalStateException(
-                            "La habitación número " + numeroHab + " no está disponible. " +
-                                    "Estado actual: " + estadoActual.getTipoEstado().getEstado()
-                    );
-                }
-
-                // Cerrar el estado actual
-                if (estadoActual != null) {
-                    estadoActual.setFechaHasta(rango.getFechaInicio().minusDays(1));
-                    session.merge(estadoActual);
-                }
-
-                // Crear nuevo estado con tipo RESERVADA
-                EstadoHabitacion nuevoEstado = EstadoHabitacion.builder()
-                        .habitacion(habitacion)
-                        .tipoEstado(tipoReservada)
-                        .fechaDesde(rango.getFechaInicio())
-                        .fechaHasta(rango.getFechaFin())
-                        .build();
-
-                habitacion.getEstados().add(nuevoEstado);
-                session.persist(nuevoEstado);
-
-                // Crear UNA reserva para ESTA habitación con SUS fechas específicas
-                Reserva reserva = Reserva.builder()
-                        .persona(persona)
-                        .habitacion(habitacion)
-                        .fechaInicio(rango.getFechaInicio())
-                        .fechaFin(rango.getFechaFin())
-                        .build();
-
-                // Persistir la reserva
-                session.persist(reserva);
-                reservasCreadas.add(reserva);
+            // Verificar disponibilidad
+            EstadoHabitacion estadoActual = habitacion.getEstadoActual();
+            if (estadoActual != null && estadoActual.getTipoEstado().getEstado() != EstadoHab.DISPONIBLE) {
+                throw new IllegalStateException(
+                        "La habitación número " + dto.getNumeroHabitacion() + " no está disponible. " +
+                                "Estado actual: " + estadoActual.getTipoEstado().getEstado()
+                );
             }
 
+            // Cerrar el estado actual
+            if (estadoActual != null) {
+                estadoActual.setFechaHasta(dto.getFechaInicio().minusDays(1));
+                session.merge(estadoActual);
+            }
+
+            // Crear nuevo estado RESERVADA
+            EstadoHabitacion nuevoEstado = EstadoHabitacion.builder()
+                    .habitacion(habitacion)
+                    .tipoEstado(tipoReservada)
+                    .fechaDesde(dto.getFechaInicio())
+                    .fechaHasta(dto.getFechaFin())
+                    .build();
+
+            habitacion.getEstados().add(nuevoEstado);
+            session.persist(nuevoEstado);
+
+            // Crear la reserva
+            Reserva reserva = Reserva.builder()
+                    .huesped(huesped)
+                    .habitacion(habitacion)
+                    .fechaInicio(dto.getFechaInicio())
+                    .fechaFin(dto.getFechaFin())
+                    .cantHuespedes(dto.getCantHuespedes())
+                    .descuento(dto.getDescuento())
+                    .build();
+
+            session.persist(reserva);
             transaction.commit();
+
+            return reserva;
 
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Error al crear reservas: " + e.getMessage(), e);
+            throw new RuntimeException("Error al crear reserva: " + e.getMessage(), e);
         }
-
-        return reservasCreadas;
-    }
-
-    @Override
-    public List<Reserva> crearReservasPorNombreApellido(String nombre, String apellido,
-                                                        Map<Integer, RangoFechas> habitacionesConFechas) {
-        Persona persona = personaDAO.buscarPorNombreApellido(nombre, apellido);
-
-        if (persona == null) {
-            throw new RuntimeException("Error: La persona no se encuentra cargada en el sistema.");
-        }
-
-        return crearReservas(persona.getId(), habitacionesConFechas);
-    }
-
-    @Override
-    public List<Reserva> crearReservasPorTelefono(String telefono,
-                                                  Map<Integer, RangoFechas> habitacionesConFechas) {
-        Persona persona = personaDAO.buscarPorTelefono(telefono);
-
-        if (persona == null) {
-            throw new RuntimeException("Error: La persona no se encuentra cargada en el sistema.");
-        }
-
-        return crearReservas(persona.getId(), habitacionesConFechas);
     }
 
     @Override
@@ -146,7 +108,7 @@ public class ReservaDAOImpl implements ReservaDAO {
                             "SELECT DISTINCT r FROM Reserva r " +
                                     "LEFT JOIN FETCH r.habitacion h " +
                                     "LEFT JOIN FETCH h.estados " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "WHERE r.id = :id",
                             Reserva.class)
                     .setParameter("id", id)
@@ -160,7 +122,7 @@ public class ReservaDAOImpl implements ReservaDAO {
             return session.createQuery(
                             "SELECT DISTINCT r FROM Reserva r " +
                                     "LEFT JOIN FETCH r.habitacion " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "ORDER BY r.fechaInicio DESC",
                             Reserva.class)
                     .getResultList();
@@ -168,15 +130,15 @@ public class ReservaDAOImpl implements ReservaDAO {
     }
 
     @Override
-    public List<Reserva> obtenerPorPersona(Long idPersona) {
+    public List<Reserva> obtenerPorHuesped(Long idHuesped) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery(
                             "SELECT DISTINCT r FROM Reserva r " +
                                     "LEFT JOIN FETCH r.habitacion " +
-                                    "WHERE r.persona.id = :idPersona " +
+                                    "WHERE r.huesped.id = :idHuesped " +
                                     "ORDER BY r.fechaInicio DESC",
                             Reserva.class)
-                    .setParameter("idPersona", idPersona)
+                    .setParameter("idHuesped", idHuesped)
                     .getResultList();
         }
     }
@@ -187,7 +149,7 @@ public class ReservaDAOImpl implements ReservaDAO {
             return session.createQuery(
                             "SELECT DISTINCT r FROM Reserva r " +
                                     "LEFT JOIN FETCH r.habitacion " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "WHERE r.fechaInicio <= :fechaFin " +
                                     "AND r.fechaFin >= :fechaInicio " +
                                     "ORDER BY r.fechaInicio",
@@ -203,7 +165,7 @@ public class ReservaDAOImpl implements ReservaDAO {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery(
                             "SELECT DISTINCT r FROM Reserva r " +
-                                    "LEFT JOIN FETCH r.persona " +
+                                    "LEFT JOIN FETCH r.huesped " +
                                     "WHERE r.habitacion.numero = :numeroHabitacion " +
                                     "ORDER BY r.fechaInicio DESC",
                             Reserva.class)
