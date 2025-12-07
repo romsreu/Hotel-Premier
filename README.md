@@ -4,12 +4,11 @@ Proyecto académico desarrollado en Java, con interfaz gráfica construida en Ja
 En su estado actual, el sistema permite gestionar huéspedes de manera básica a través de un flujo completo de carga, validación y almacenamiento.
 
 ## **Estado actual del proyecto**
-- Menú principal funcional con navegación inicial.
+- Menú principal con navegación.
 - Alta de Huésped mediante formulario completo.
-- Validaciones parciales de campos.
-- Persistencia real en base de datos Neon.
-- Patrones DAO y DTO aplicados para organizar la lógica de acceso y transferencia de datos.
-- Interfaz JavaFX estilizada con CSS.
+- Búsqueda de Huésped.
+- Reserva de habitaciones.
+- Ocupacion de habitaciones.
 
 ## **Base de datos**
 El sistema utiliza una base PostgreSQL remota en Neon, lo que permite ejecutar y probar el proyecto desde cualquier computadora.
