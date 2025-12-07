@@ -9,20 +9,49 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@PrimaryKeyJoinColumn(name = "id_persona")
-public class Huesped extends Persona {
+@Builder
+public class Huesped {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_huesped")
+    private Long id;
+
+    @Column(nullable = false, length = 80)
+    private String nombre;
+
+    @Column(nullable = false, length = 80)
+    private String apellido;
+
+    @Column(nullable = false, length = 20)
     private String numeroDocumento;
+
+    @Column(nullable = false, length = 20)
     private String tipoDocumento;
-    private String posicionIVA;
-    private String fechaNacimiento;
-    private String ocupacion;
-    private String nacionalidad;
+
+    @Column(length = 30)
+    private String telefono;
+
+    @Column(length = 100)
     private String email;
+
+    @Column(length = 15)
     private String cuit;
 
-    // Constructor para clonar Persona
-    public Huesped(Persona p) {
-        super(p.getId(), p.getNombre(), p.getApellido(), p.getTelefono(), p.getDireccion());
-    }
+    @Column(length = 20)
+    private String posicionIVA;
+
+    @Column(length = 10)
+    private String fechaNacimiento;
+
+    @Column(length = 50)
+    private String ocupacion;
+
+    @Column(length = 50)
+    private String nacionalidad;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_direccion")
+    private Direccion direccion;
+
 }

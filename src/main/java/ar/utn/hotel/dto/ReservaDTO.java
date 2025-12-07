@@ -1,38 +1,23 @@
 package ar.utn.hotel.dto;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "reserva")
+@Builder
 public class ReservaDTO {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idReserva;
-
+    private Long id;
+    private Long idHuesped;
+    private String nombreHuesped;
+    private String apellidoHuesped;
+    private String telefonoHuesped;
+    private Integer numeroHabitacion;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
-
-    @ManyToOne
-    @JoinColumn(name = "id_responsable")
-    private ResponsableDePagoDTO responsableDePago;
-
-    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
-    private List<HabitacionDTO> habitaciones;
-
-    @ManyToMany
-    @JoinTable(
-            name = "huesped_reserva",
-            joinColumns = @JoinColumn(name = "id_reserva"),
-            inverseJoinColumns = @JoinColumn(name = "id_huesped")
-    )
-    private List<HuespedDTO> huespedes;
-
+    private Integer cantHuespedes;
+    private Double descuento;
+    private Boolean tieneEstadia;
 }

@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="root" prefWidth="350" prefHeight="180"
+<AnchorPane fx:id="root" prefWidth="450" minHeight="250" maxHeight="600"
+            style="-fx-background-radius: 10; -fx-border-radius: 10;"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.PopUpController">
+            fx:controller="controllers.PopUp.PopUpController">
 
-    <VBox spacing="15" alignment="CENTER" layoutX="0" layoutY="0"
-          prefWidth="350" prefHeight="180">
+    <VBox spacing="20" alignment="CENTER"
+          AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="20"
+          AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
 
-        <Label fx:id="lblIcon" style="-fx-font-size: 40;" />
-        <Label fx:id="lblMensaje" wrapText="true" style="-fx-font-size: 16;" />
+        <!-- Icono -->
+        <Label fx:id="lblIcon" style="-fx-font-size: 48px;" />
 
-        <Button text="Aceptar" fx:id="btnAceptar" onAction="#cerrar"
-                style="-fx-padding: 8 20; -fx-background-radius: 8;" />
+        <!-- Mensaje con ScrollPane para textos largos -->
+        <ScrollPane fitToWidth="true" prefHeight="150" maxHeight="380"
+                    style="-fx-background: transparent; -fx-background-color: transparent;
+                           -fx-border-color: transparent;">
+            <Label fx:id="lblMensaje" wrapText="true" textAlignment="CENTER"
+                   style="-fx-font-size: 14px; -fx-padding: 10;"
+                   prefWidth="390" />
+        </ScrollPane>
+
+        <!-- Contenedor de botones -->
+        <HBox fx:id="hboxBotones" alignment="CENTER" spacing="15">
+            <!-- Botón Cancelar (oculto por defecto) -->
+            <Button fx:id="btnCancelar" text="Cancelar"
+                    onAction="#cancelar" visible="false" managed="false"
+                    style="-fx-background-color: #6c757d; -fx-text-fill: white;
+                           -fx-padding: 10 20; -fx-cursor: hand; -fx-font-size: 13px;" />
+
+            <!-- Botón principal (Aceptar/Confirmar) -->
+            <Button fx:id="btnAceptar" text="Aceptar"
+                    onAction="#aceptar"
+                    style="-fx-background-color: #28a745; -fx-text-fill: white;
+                           -fx-padding: 10 20; -fx-cursor: hand; -fx-font-size: 13px;" />
+        </HBox>
     </VBox>
 
 </AnchorPane>

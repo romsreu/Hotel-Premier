@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="950.0" styleClass="panel-azul-noche" stylesheets="@../../../styles/paneles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ReservarHabitacion.ReservarHabitacionController2">
+    <children>
+        <!-- Header -->
+        <StackPane layoutY="40.0" prefHeight="75.0" prefWidth="950.0" styleClass="panel-negro-suave" stylesheets="@../../../styles/paneles.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Label styleClass="texto-titulo" stylesheets="@../../../styles/textos.css" text="RESERVAR HABITACIÓN">
+                    <font>
+                        <Font size="43.0" />
+                    </font>
+                </Label>
+            </children>
+        </StackPane>
+
+        <!-- Contenido Central -->
+        <StackPane stylesheets="@../../../styles/paneles.css" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="150.0">
+            <children>
+                <VBox alignment="CENTER" maxWidth="550.0" spacing="20.0">
+                    <children>
+                        <!-- Título -->
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Reserva a nombre de:">
+                            <font>
+                                <Font name="Lucida Bright Demibold" size="20.0" />
+                            </font>
+                        </Label>
+
+                        <!-- Campo Nombre -->
+                        <VBox alignment="CENTER" maxWidth="500.0" spacing="5.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                    <children>
+                                        <Label styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Nombre">
+                                            <font>
+                                                <Font name="Lucida Bright Demibold" size="15.0" />
+                                            </font>
+                                        </Label>
+                                        <ImageView fx:id="nombreO" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                            <image>
+                                                <Image url="@../../../images/advertencia.png" />
+                                            </image>
+                                            <cursor>
+                                                <Cursor fx:constant="CROSSHAIR" />
+                                            </cursor>
+                                        </ImageView>
+                                    </children>
+                                </HBox>
+                                <TextField fx:id="tfNombre" maxWidth="500.0" promptText="Ingrese el Nombre" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
+
+                        <!-- Campo Apellido -->
+                        <VBox alignment="CENTER" maxWidth="500.0" spacing="5.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                    <children>
+                                        <Label styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Apellido">
+                                            <font>
+                                                <Font name="Lucida Bright Demibold" size="15.0" />
+                                            </font>
+                                        </Label>
+                                        <ImageView fx:id="apellidoO" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                            <image>
+                                                <Image url="@../../../images/advertencia.png" />
+                                            </image>
+                                            <cursor>
+                                                <Cursor fx:constant="CROSSHAIR" />
+                                            </cursor>
+                                        </ImageView>
+                                    </children>
+                                </HBox>
+                                <TextField fx:id="tfApellido" maxWidth="500.0" promptText="Ingrese el Apellido" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
+
+                        <!-- Campo Teléfono -->
+                        <VBox alignment="CENTER" maxWidth="500.0" spacing="5.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                    <children>
+                                        <Label styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Teléfono">
+                                            <font>
+                                                <Font name="Lucida Bright Demibold" size="15.0" />
+                                            </font>
+                                        </Label>
+                                        <ImageView fx:id="telefonoO" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                            <image>
+                                                <Image url="@../../../images/advertencia.png" />
+                                            </image>
+                                            <cursor>
+                                                <Cursor fx:constant="CROSSHAIR" />
+                                            </cursor>
+                                        </ImageView>
+                                    </children>
+                                </HBox>
+                                <TextField fx:id="tfTelefono" maxWidth="500.0" promptText="Ej: 3512345678" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
+
+                        <!-- Nota informativa -->
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="El huésped debe estar dado de alta para reservar" wrapText="true">
+                            <font>
+                                <Font name="Lucida Bright" size="11.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="10.0" />
+                            </VBox.margin>
+                        </Label>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+
+        <!-- Botones Inferiores -->
+        <HBox alignment="CENTER" layoutX="4.0" layoutY="500.0" prefHeight="100.0" prefWidth="950.0" spacing="70.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#onCancelarClicked" prefHeight="54.0" prefWidth="185.0" styleClass="boton-cancelar" stylesheets="@../../../styles/botones.css" text="CANCELAR">
+                    <font>
+                        <Font name="Lucida Bright Demibold" size="19.0" />
+                    </font>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+                <Button fx:id="btnVolver" mnemonicParsing="false" onAction="#onVolverClicked" prefHeight="54.0" prefWidth="185.0" styleClass="boton-volver" stylesheets="@../../../styles/botones.css" text="VOLVER">
+                    <font>
+                        <Font name="Lucida Bright Demibold" size="19.0" />
+                    </font>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+                <Button fx:id="btnConfirmar" mnemonicParsing="false" onAction="#onConfirmarClicked" prefHeight="54.0" prefWidth="230.0" styleClass="boton-confirmar" stylesheets="@../../../styles/botones.css" text="CONFIRMAR RESERVA" textFill="#e1ffcc">
+                    <font>
+                        <Font name="Lucida Bright Demibold" size="16.0" />
+                    </font>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

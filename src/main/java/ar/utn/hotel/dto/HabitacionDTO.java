@@ -1,26 +1,19 @@
 package ar.utn.hotel.dto;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "habitacion")
+@Builder
 public class HabitacionDTO {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idHabitacion;
-
-    private String numero;
+    private Integer numero;
     private String tipo;
-    private boolean ocupada;
-
-    @ManyToOne
-    @JoinColumn(name = "id_reserva")
-    private ReservaDTO reserva;
-
+    private Integer idTipoHabitacion;
+    private Double costoNoche;
+    private Integer piso;
+    private Integer capacidad;
+    private String descripcion;
+    private String estadoActual; // DISPONIBLE, OCUPADA, RESERVADA, MANTENIMIENTO
 }

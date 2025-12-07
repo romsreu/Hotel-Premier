@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="rootPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="950.0" styleClass="fondo-petroleo" stylesheets="@../../../styles/fondos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MenuPrincipal.MenuPrincipalController">
+   <children>
+      <StackPane layoutX="323.2" layoutY="139.2" prefHeight="461.0" prefWidth="627.0" stylesheets="@../../../styles/fondos.css" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <ImageView fitHeight="671.0" fitWidth="834.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+               <image>
+                  <Image url="@../../../images/logo_hotel.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color red="1.0" green="0.9012345671653748" blue="0.25925925374031067" />
+               </color>
+            </DropShadow>
+         </effect>
+      </StackPane>
+      <StackPane layoutX="732.0" layoutY="4.0" prefHeight="87.0" prefWidth="204.0" stylesheets="@../../../styles/fondos.css" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <AnchorPane opacity="0.2" prefHeight="200.0" prefWidth="200.0" styleClass="fondo-dorado-oscuro">
+               <effect>
+                  <Shadow />
+               </effect>
+            </AnchorPane>
+            <Label styleClass="texto-arena" stylesheets="@../../../styles/textos.css" text="Rotoag Pasc" textAlignment="CENTER" StackPane.alignment="TOP_RIGHT">
+               <font>
+                  <Font name="Lucida Bright" size="14.0" />
+               </font>
+               <StackPane.margin>
+                  <Insets right="26.0" top="15.0" />
+               </StackPane.margin>
+            </Label>
+            <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="114.0" styleClass="boton-cancelar" stylesheets="@../../../styles/botones.css" text="Cerrar Sesión" StackPane.alignment="BOTTOM_RIGHT">
+               <StackPane.margin>
+                  <Insets bottom="20.0" right="10.0" />
+               </StackPane.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <ImageView fitHeight="61.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
+               <image>
+                  <Image url="@../../../images/generic_avatar.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets left="10.0" top="12.0" />
+               </StackPane.margin>
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" height="56.09" radius="27.545" width="56.09">
+                     <color>
+                        <Color red="0.9859259128570557" green="1.0" blue="0.5777778029441833" />
+                     </color>
+                  </DropShadow>
+               </effect>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+      </StackPane>
+      <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <MenuButton contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="46.0" prefWidth="254.0" stylesheets="@../../../styles/botones.css" text="Habitaciones y Reservas">
+                    <items>
+                        <MenuItem fx:id="mostrarEstadoHabs" mnemonicParsing="false" onAction="#on_mostrar_estado_habs_pressed" text="Mostrar Estado de Habitaciones" />
+                      <MenuItem mnemonicParsing="false" onAction="#on_reservar_habs_pressed" text="Reservar Habitación" />
+                      <MenuItem mnemonicParsing="false" onAction="#on_ocupar_habs_pressed" text="Ocupar Habitación" />
+                    </items>
+                     <font>
+                        <Font name="Lucida Bright" size="17.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MenuButton>
+                  <MenuButton contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="51.0" prefWidth="242.0" stylesheets="@../../../styles/botones.css" text="Gestión de Huéspedes">
+                     <items>
+                        <MenuItem fx:id="alta_huesped" mnemonicParsing="false" onAction="#on_alta_huesped_pressed" text="Dar Alta de Huésped" />
+                        <MenuItem mnemonicParsing="false" text="Dar Baja de Huésped" />
+                        <MenuItem mnemonicParsing="false" text="Modificar Huésped" />
+                        <MenuItem mnemonicParsing="false" onAction="#on_buscar_huesped_pressed" text="Buscar Huésped" />
+                     </items>
+                     <font>
+                        <Font name="Lucida Bright" size="17.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MenuButton>
+                  <MenuButton contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="51.0" prefWidth="232.0" styleClass="boton-arena" stylesheets="@../../../styles/botones.css" text="Responsables de Pago">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Dar Alta de Responsable de Pago" />
+                        <MenuItem mnemonicParsing="false" text="Dar Baja de Responsable de Pago" />
+                        <MenuItem mnemonicParsing="false" text="Modificar Responsable de Pago" />
+                        <MenuItem mnemonicParsing="false" text="Buscar Responsable de Pago" />
+                     </items>
+                     <font>
+                        <Font name="Lucida Bright" size="17.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MenuButton>
+                  <MenuButton contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="51.0" prefWidth="218.0" styleClass="boton-arena" stylesheets="@../../../styles/botones.css" text="Facturación y Pagos">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Ingresar Nota de Crédito" />
+                        <MenuItem mnemonicParsing="false" text="Ingresar Pago" />
+                        <MenuItem mnemonicParsing="false" text="Facturar" />
+                     </items>
+                     <font>
+                        <Font name="Lucida Bright" size="17.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MenuButton>
+                  <MenuButton contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="51.0" prefWidth="206.0" styleClass="boton-arena" stylesheets="@../../../styles/botones.css" text="Listados">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Listado de Cheques" />
+                        <MenuItem mnemonicParsing="false" text="Listado de Ingresos" />
+                     </items>
+                     <font>
+                        <Font name="Lucida Bright" size="17.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MenuButton>
+               </children>
+               <stylesheets>
+                  <URL value="@../../../styles/paneles.css" />
+                  <URL value="@../../../styles/campos.css" />
+               </stylesheets>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="532.0" styleClass="fondo-noche" stylesheets="@../../../styles/fondos.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <HBox layoutX="834.0" layoutY="8.0" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="20.0">
+               <children>
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="versión 0.1" wrappingWidth="94.59996795654286">
+                     <font>
+                        <Font name="Lucida Bright" size="17.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="20.0" layoutY="10.0" prefHeight="29.0" prefWidth="166.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0">
+               <children>
+                  <Text fx:id="fechaId" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="07/11/2025" wrappingWidth="102.80001831054688">
+                     <font>
+                        <Font name="Lucida Bright" size="17.0" />
+                     </font>
+                  </Text>
+                  <Line endX="869.0" endY="47.5859375" startX="869.0" startY="20.0" stroke="WHITE" />
+                  <Text fx:id="horaId" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="21:30" textAlignment="CENTER" wrappingWidth="76.5999755859375">
+                     <font>
+                        <Font name="Lucida Bright" size="17.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

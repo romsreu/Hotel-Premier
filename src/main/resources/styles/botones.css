@@ -48,6 +48,7 @@
 .boton-oscuro:focused,
 .boton-icono:focused,
 .boton-accion:focused,
+.boton-volver:focused,
 .boton-animado:focused,
 .boton-nav:focused,
 .boton-alerta:focused {
@@ -70,6 +71,26 @@
 }
 .boton-confirmar:pressed {
     -fx-background-color: linear-gradient(to bottom, #66BB6A, #388E3C);
+    -fx-translate-y: 1px;
+}
+/* ============================================================
+   ❌ BOTÓN VOLVER / ELIMINAR
+   ============================================================ */
+.boton-volver {
+    -fx-background-color: linear-gradient(to bottom, #efbd50, #e59f35, #b76f1c);
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: rgba(255,255,255,0.25);
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(229, 132, 53, 0.6), 8, 0.5, 0, 1);
+}
+.boton-volver:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffb77c, #ef8d50, #c6a628);
+    -fx-effect: dropshadow(gaussian, rgba(244, 105, 54, 0.75), 10, 0.4, 0, 1);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+.boton-volver:pressed {
+    -fx-background-color: linear-gradient(to bottom, #e5dc35, #c68f28);
     -fx-translate-y: 1px;
 }
 

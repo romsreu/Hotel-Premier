@@ -108,3 +108,235 @@
     -fx-background-color: linear-gradient(to bottom, #E8EAEC, #BDC3C7);
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0.2, 0, 2);
 }
+/* ============================
+   TABPANE — HOTEL PREMIER STYLE
+   ============================ */
+
+/* Fondo del header transparente */
+.tab-pane *.tab-header-area {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 6 0;
+}
+
+/* Eliminar fondo y borde del contenido */
+.tab-pane > .tab-content-area {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Quitar fondo adicional generado por JavaFX */
+.tab-pane .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+/* Estilo base de las tabs */
+.tab {
+    -fx-background-color: linear-gradient(to bottom, #fdf2d1, #e7c375, #c89b3c);
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 6 8;
+    -fx-cursor: hand;
+
+    -fx-border-color: rgba(0,0,0,0.25);
+    -fx-border-width: 0 0 1 0;
+
+    -fx-font-family: "Lucida Bright";
+    -fx-font-size: 13px;
+    -fx-text-fill: #3B2B1A;
+}
+
+/* TAB SELECCIONADA — versión correcta */
+.tab:selected .tab-container {
+    -fx-background-color: linear-gradient(to bottom, #c9d3cf, #ffffff, #ffffff);
+    -fx-background-radius: 8 8 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(255,210,120,0.6), 12, 0.3, 0, 2);
+}
+
+/* Texto de la tab seleccionada */
+.tab:selected .tab-label {
+    -fx-text-fill: #2E1D0E;
+    -fx-font-weight: bold;
+}
+
+/* Efecto hover */
+.tab:hover {
+    -fx-background-color: linear-gradient(to bottom, #fff1c4, #f0cf84, #d2a149);
+    -fx-text-fill: #3B2B1A;
+}
+
+/* Quitar cualquier borde/gris feo del TabPane */
+.tab-pane {
+    -fx-background-color: transparent;
+}
+
+/* Quitar borde azul de foco */
+.tab:selected {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tab:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tab-pane:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+/* =================================
+   PAGINATION — HOTEL PREMIER STYLE
+   ================================= */
+
+/* Fondo general transparente */
+.pagination {
+    -fx-background-color: none;
+}
+
+/* Contenedor de los botones */
+.pagination .control-box {
+    -fx-background-color: transparent;
+    -fx-spacing: 4;
+}
+
+/* Botones de página */
+.pagination .number-button {
+    -fx-background-color: linear-gradient(to bottom, #f8d87e, #e5b85b, #c59438);
+    -fx-text-fill: #3B2B1A;
+    -fx-font-family: "Lucida Bright";
+    -fx-font-size: 12px;
+    -fx-background-radius: 6;
+    -fx-padding: 4 9;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0.3, 0, 1);
+}
+
+/* Página seleccionada */
+.pagination .number-button:selected {
+    -fx-background-color: linear-gradient(to bottom, #ffe5a1, #eac37c, #c89b3c);
+    -fx-text-fill: #2E1D0E;
+    -fx-effect: dropshadow(gaussian, rgba(255,210,120,0.6), 12, 0.3, 0, 1);
+}
+
+/* Hover */
+.pagination .number-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #fff0c7, #f2d48a, #d5a651);
+}
+
+/* Flechas (prev/next) */
+.pagination .left-arrow,
+.pagination .right-arrow {
+    -fx-background-color: linear-gradient(to bottom, #fdf2d1, #e7c375, #c89b3c);
+    -fx-padding: 4;
+    -fx-background-radius: 6;
+}
+
+.pagination .left-arrow:hover,
+.pagination .right-arrow:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffe9b0, #edc676, #c89b3c);
+}
+/* =================================
+   SCROLL PANE — HOTEL PREMIER STYLE
+   ================================= */
+
+/* Contenedor principal del ScrollPane */
+.scroll-pane {
+    -fx-background-color: linear-gradient(to bottom, #fdf8ed, #f5f0e1);
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0.2, 0, 2);
+}
+
+/* Viewport del contenido */
+.scroll-pane > .viewport {
+    -fx-background-color: linear-gradient(to bottom, #fdf8ed, #f5f0e1);
+}
+
+/* Contenido interno */
+.scroll-pane .content {
+    -fx-background-color: transparent;
+}
+
+/* Barra de scroll vertical - MÁS ANCHA Y VISIBLE */
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 4;
+    -fx-pref-width: 16px; /* Ancho de la barra completa */
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: linear-gradient(to right, #e8dcc4, #ded2b8);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-min-width: 12px; /* Ancho mínimo del track */
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(to right, #c9ad7a, #e7c375);
+    -fx-background-radius: 7;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0.4, 0, 1);
+    -fx-min-width: 12px; /* Ancho mínimo del thumb */
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: linear-gradient(to right, #d5b786, #edc982);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 5, 0.5, 0, 1);
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: linear-gradient(to right, #b39564, #d5b168);
+}
+
+/* Barra de scroll horizontal - MÁS ANCHA Y VISIBLE */
+.scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 4;
+    -fx-pref-height: 16px; /* Alto de la barra completa */
+}
+
+.scroll-pane .scroll-bar:horizontal .track {
+    -fx-background-color: linear-gradient(to bottom, #e8dcc4, #ded2b8);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-min-height: 12px; /* Alto mínimo del track */
+}
+
+.scroll-pane .scroll-bar:horizontal .thumb {
+    -fx-background-color: linear-gradient(to bottom, #c9ad7a, #e7c375);
+    -fx-background-radius: 7;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0.4, 0, 1);
+    -fx-min-height: 12px; /* Alto mínimo del thumb */
+}
+
+.scroll-pane .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: linear-gradient(to bottom, #d5b786, #edc982);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 5, 0.5, 0, 1);
+}
+
+.scroll-pane .scroll-bar:horizontal .thumb:pressed {
+    -fx-background-color: linear-gradient(to bottom, #b39564, #d5b168);
+}
+
+/* Botones de incremento/decremento (flechas) - ocultarlos */
+.scroll-pane .scroll-bar .increment-button,
+.scroll-pane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+/* Esquina donde se cruzan las barras */
+.scroll-pane .corner {
+    -fx-background-color: #f5f0e1;
+}
+
+/* Header del Grid dentro del ScrollPane */
+.grid-header {
+    -fx-background-color: linear-gradient(to bottom, #e7c375, #d5b168);
+    -fx-border-color: #c89b3c;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0.3, 0, 1);
+}

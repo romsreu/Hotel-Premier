@@ -48,6 +48,8 @@
             <scope>test</scope>
         </dependency>
 
+
+
         <!-- Hibernate ORM -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>

@@ -1,32 +1,37 @@
 package ar.utn.hotel.gestor;
 
-import ar.utn.hotel.dao.DireccionDAO;
-import ar.utn.hotel.dao.HuespedDAO;
-import ar.utn.hotel.dao.impl.DireccionDAOImpl;
-import ar.utn.hotel.dao.impl.HuespedDAOImpl;
+import ar.utn.hotel.dao.interfaces.DireccionDAO;
+import ar.utn.hotel.dao.interfaces.HuespedDAO;
+import ar.utn.hotel.dao.implement.DireccionDAOImpl;
+import ar.utn.hotel.dao.implement.HuespedDAOImpl;
 import ar.utn.hotel.dto.DarAltaHuespedDTO;
+import ar.utn.hotel.dto.HuespedDTO;
 import ar.utn.hotel.model.*;
+
+import java.util.List;
 
 public class GestorHuesped {
 
     private final DireccionDAO direccionDAO;
     private final HuespedDAO huespedDAO;
 
-    // Constructor por defecto con implementaciones concretas
+    // Constructor por defecto
     public GestorHuesped() {
         this.direccionDAO = new DireccionDAOImpl();
         this.huespedDAO = new HuespedDAOImpl();
     }
 
-    // Constructor para inyección de dependencias (útil para testing)
+    // Constructor para inyección de dependencias
     public GestorHuesped(DireccionDAO direccionDAO, HuespedDAO huespedDAO) {
         this.direccionDAO = direccionDAO;
         this.huespedDAO = huespedDAO;
     }
 
+    /**
+     * Da de alta un nuevo huésped en el sistema
+     */
     public Huesped cargar(DarAltaHuespedDTO dto) {
-
-        // 1) Verificar si ya existe un huésped con ese documento
+        // Verificar si ya existe
         if (huespedDAO.existePorDocumento(dto.getNumeroDocumento(), dto.getTipoDocumento())) {
             throw new IllegalArgumentException(
                     "Ya existe un huésped registrado con el documento " +
@@ -34,7 +39,7 @@ public class GestorHuesped {
             );
         }
 
-        // 2) Buscar o crear Dirección
+        // Buscar o crear Dirección
         Direccion dir = direccionDAO.buscarPorDatos(
                 dto.getCalle(),
                 dto.getNumero(),
@@ -61,26 +66,129 @@ public class GestorHuesped {
             direccionDAO.guardar(dir);
         }
 
-        // 3) Crear Huesped directamente (hereda de Persona)
-        Huesped huesped = new Huesped();
+        // Crear Huesped
+        Huesped huesped = Huesped.builder()
+                .nombre(dto.getNombre())
+                .apellido(dto.getApellido())
+                .telefono(dto.getTelefono())
+                .direccion(dir)
+                .numeroDocumento(dto.getNumeroDocumento())
+                .tipoDocumento(dto.getTipoDocumento())
+                .posicionIVA(dto.getPosicionIVA())
+                .fechaNacimiento(dto.getFechaNacimiento())
+                .ocupacion(dto.getOcupacion())
+                .nacionalidad(dto.getNacionalidad())
+                .email(dto.getEmail())
+                .cuit(dto.getCuit())
+                .build();
 
-        // Datos de Persona (clase padre)
-        huesped.setNombre(dto.getNombre());
-        huesped.setApellido(dto.getApellido());
-        huesped.setTelefono(dto.getTelefono());
-        huesped.setDireccion(dir);
-
-        // Datos específicos de Huesped
-        huesped.setNumeroDocumento(dto.getNumeroDocumento());
-        huesped.setTipoDocumento(dto.getTipoDocumento());
-        huesped.setPosicionIVA(dto.getPosicionIVA());
-        huesped.setFechaNacimiento(dto.getFechaNacimiento());
-        huesped.setOcupacion(dto.getOcupacion());
-        huesped.setNacionalidad(dto.getNacionalidad());
-        huesped.setEmail(dto.getEmail());
-        huesped.setCuit(dto.getCuit());
-
-        // 4) Guardar Huesped (Hibernate maneja la herencia automáticamente)
         return huespedDAO.guardar(huesped);
+    }
+
+    /**
+     * Busca huéspedes según criterios flexibles
+     * Solo busca por los campos que no sean null en el DTO
+     */
+    public List<Huesped> buscarHuesped(HuespedDTO dto) {
+        return huespedDAO.buscarHuesped(dto);
+    }
+
+    /**
+     * Busca huéspedes por nombre y apellido
+     */
+    public List<Huesped> buscarPorNombreApellido(String nombre, String apellido) {
+        HuespedDTO dto = HuespedDTO.builder()
+                .nombre(nombre)
+                .apellido(apellido)
+                .build();
+        return buscarHuesped(dto);
+    }
+
+    /**
+     * Busca huéspedes por nombre, apellido y número de documento
+     */
+    public List<Huesped> buscarPorNombreApellidoDocumento(String nombre, String apellido, String numeroDocumento) {
+        HuespedDTO dto = HuespedDTO.builder()
+                .nombre(nombre)
+                .apellido(apellido)
+                .numeroDocumento(numeroDocumento)
+                .build();
+        return buscarHuesped(dto);
+    }
+
+    /**
+     * Busca huéspedes por documento
+     */
+    public List<Huesped> buscarPorDocumento(String numeroDocumento, String tipoDocumento) {
+        HuespedDTO dto = HuespedDTO.builder()
+                .numeroDocumento(numeroDocumento)
+                .tipoDocumento(tipoDocumento)
+                .build();
+        return buscarHuesped(dto);
+    }
+
+    /**
+     * Busca huéspedes por email
+     */
+    public List<Huesped> buscarPorEmail(String email) {
+        HuespedDTO dto = HuespedDTO.builder()
+                .email(email)
+                .build();
+        return buscarHuesped(dto);
+    }
+
+    /**
+     * Busca huéspedes por teléfono
+     */
+    public List<Huesped> buscarPorTelefono(String telefono) {
+        HuespedDTO dto = HuespedDTO.builder()
+                .telefono(telefono)
+                .build();
+        return buscarHuesped(dto);
+    }
+
+    /**
+     * Obtiene un huésped por ID
+     */
+    public Huesped obtenerPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("El ID no puede ser nulo");
+        }
+
+        Huesped huesped = huespedDAO.obtenerPorId(id);
+        if (huesped == null) {
+            throw new IllegalArgumentException("No existe huésped con ID " + id);
+        }
+
+        return huesped;
+    }
+
+    /**
+     * Obtiene todos los huéspedes
+     */
+    public List<Huesped> obtenerTodos() {
+        return huespedDAO.obtenerTodos();
+    }
+
+    /**
+     * Actualiza un huésped existente
+     */
+    public void actualizar(Huesped huesped) {
+        if (huesped == null || huesped.getId() == null) {
+            throw new IllegalArgumentException("El huésped o su ID no pueden ser nulos");
+        }
+
+        huespedDAO.actualizar(huesped);
+    }
+
+    /**
+     * Elimina un huésped
+     */
+    public void eliminar(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("El ID no puede ser nulo");
+        }
+
+        huespedDAO.eliminar(id);
     }
 }

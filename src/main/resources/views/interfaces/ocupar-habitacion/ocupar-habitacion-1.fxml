@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="950.0" styleClass="panel-azul-noche" stylesheets="@../../../styles/paneles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.OcuparHabitacion.OcuparHabitacionController1">
+    <children>
+        <StackPane layoutY="40.0" prefHeight="75.0" prefWidth="950.0" styleClass="panel-negro-suave" stylesheets="@../../../styles/paneles.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Label styleClass="texto-titulo" stylesheets="@../../../styles/textos.css" text="OCUPAR HABITACIÓN">
+                    <font>
+                        <Font size="43.0" />
+                    </font>
+                </Label>
+            </children>
+        </StackPane>
+        <StackPane stylesheets="@../../../styles/paneles.css" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="150.0">
+            <children>
+                <VBox alignment="CENTER" maxWidth="500.0" spacing="15.0">
+                    <children>
+                        <VBox alignment="CENTER" maxWidth="500.0">
+                            <children>
+                                <Label maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Nombre">
+                                    <font>
+                                        <Font name="Lucida Bright" size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="tfNombre" maxWidth="500.0" promptText="Ingrese el Nombre" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
+                        <VBox alignment="CENTER" maxWidth="500.0">
+                            <children>
+                                <Label maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Apellido">
+                                    <font>
+                                        <Font name="Lucida Bright" size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="tfApellido" maxWidth="500.0" promptText="Ingrese el Apellido" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
+                        <VBox alignment="CENTER" maxWidth="500.0" spacing="8.0">
+                            <children>
+                                <Label maxWidth="1.7976931348623157E308" styleClass="texto-perla" stylesheets="@../../../styles/textos.css" text="Número de Documento (Opcional)">
+                                    <font>
+                                        <Font name="Lucida Bright" size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="tfNumeroDocumento" maxWidth="500.0" promptText="Ingrese el número de DNI" stylesheets="@../../../styles/campos.css">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </TextField>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+        <HBox alignment="CENTER" layoutX="4.0" layoutY="500.0" prefHeight="100.0" prefWidth="950.0" spacing="70.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#onCancelarClicked" prefHeight="54.0" prefWidth="185.0" styleClass="boton-cancelar" stylesheets="@../../../styles/botones.css" text="CANCELAR">
+                    <font>
+                        <Font name="Lucida Bright Demibold" size="19.0" />
+                    </font>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+                <Button fx:id="btnAceptar" mnemonicParsing="false" onAction="#onAceptarClicked" prefHeight="54.0" prefWidth="185.0" styleClass="boton-confirmar" stylesheets="@../../../styles/botones.css" text="ACEPTAR" textFill="#e1ffcc">
+                    <font>
+                        <Font name="Lucida Bright Demibold" size="19.0" />
+                    </font>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

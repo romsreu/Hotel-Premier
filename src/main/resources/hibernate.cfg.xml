@@ -16,8 +16,8 @@
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 
         <!-- === Mostrar las consultas SQL en consola === -->
-        <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.format_sql">true</property>
+        <!--        <property name="hibernate.show_sql">true</property>-->
+        <!--        <property name="hibernate.format_sql">true</property>-->
 
         <!--  ESTA ES LA CLAVE -->
         <!-- "update" → crea las tablas si no existen y actualiza si cambian -->
@@ -30,10 +30,13 @@
              none → desactiva totalmente -->
 
         <!-- === Mapeo de entidades === -->
-        <mapping class="ar.utn.hotel.model.Persona"/>
         <mapping class="ar.utn.hotel.model.Direccion"/>
         <mapping class="ar.utn.hotel.model.Huesped"/>
-
-
+        <mapping class="ar.utn.hotel.model.Habitacion"/>
+        <mapping class="ar.utn.hotel.model.TipoHabitacion"/>
+        <mapping class="ar.utn.hotel.model.Reserva"/>
+        <mapping class="ar.utn.hotel.model.Estadia"/>
+        <mapping class="ar.utn.hotel.model.EstadoHabitacion"/>
+        <mapping class="ar.utn.hotel.model.TipoEstado"/>
     </session-factory>
 </hibernate-configuration>
