@@ -18,7 +18,6 @@ Toda la documentación de análisis y diseño del sistema se encuentra centraliz
 
 - Diagramas UML (casos de uso, clases, secuencia, estados)
 - Documentación de entradas/salidas y flujos del sistema
-- Modelos de datos (DER y diagrama de tablas)
+- Diagrama de entidad-relación
 - Diagramas de arquitectura lógica y física
-- Script SQL de creación de la base de datos
 
