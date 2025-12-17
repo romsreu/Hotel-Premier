@@ -37,19 +37,14 @@ public class OcuparHabitacionController2 {
 
     @FXML
     public void initialize() {
-        // Inicializar gestores
+
         gestorHabitacion = new GestorHabitacion();
         gestorReserva = new GestorReserva();
-
-        // Establecer referencias circulares
         gestorReserva.setGestorHabitacion(gestorHabitacion);
         gestorHabitacion.setGestorReserva(gestorReserva);
-
-        // Obtener datos del DataTransfer
         huespedesEncontrados = DataTransfer.getHuespedesEnBusqueda();
         habitacionesSeleccionadas = DataTransfer.getHabitacionesSeleccionadas();
 
-        // Validar que tengamos todos los datos necesarios
         if (huespedesEncontrados == null || huespedesEncontrados.isEmpty()) {
             PopUpController.mostrarPopUp(
                     PopUpType.ERROR,
