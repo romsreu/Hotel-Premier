@@ -8,7 +8,7 @@ En su estado actual, el sistema permite gestionar huéspedes de manera básica a
 - Alta de Huésped mediante formulario completo.
 - Búsqueda de Huésped.
 - Reserva de habitaciones.
-- Ocupacion de habitaciones.
+- Ocupación de habitaciones.
 
 ## **Base de datos**
 El sistema utiliza una base PostgreSQL remota en Neon, lo que permite ejecutar y probar el proyecto desde cualquier computadora.
