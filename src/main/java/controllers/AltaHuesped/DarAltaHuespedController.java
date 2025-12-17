@@ -183,25 +183,17 @@ public class DarAltaHuespedController {
 
     private DarAltaHuespedDTO crearDTODesdeFormulario() {
         DarAltaHuespedDTO dto = new DarAltaHuespedDTO();
-
-        // Datos personales
         dto.setNombre(txtNombre.getText());
         dto.setApellido(txtApellido.getText());
         dto.setEmail(txtEmail.getText());
         dto.setTelefono(txtTel.getText());
         dto.setOcupacion(txtOcupacion.getText());
-
-        // Datos de identificación
         dto.setTipoDocumento(comboTipoDoc.getValue().name());
         dto.setNumeroDocumento(txtNumDoc.getText());
         dto.setCuit(txtCuit.getText());
         dto.setPosicionIVA(combPosicionIva.getValue().name());
-
-        // Datos de nacimiento
         dto.setFechaNacimiento(obtenerFechaNacimiento());
         dto.setNacionalidad(comboNacionalidad.getValue());
-
-        // Datos de dirección
         dto.setPais(comboPais.getValue());
         dto.setProvincia(comboProvincia.getValue());
         dto.setLocalidad(comboLocalidad.getValue());
@@ -297,14 +289,8 @@ public class DarAltaHuespedController {
 
     private void agregarValidacionesDeCampos() {
         validator = new Validator();
-
-        // Validaciones de texto
         validarCamposTexto();
-
-        // Validaciones de selección
         validarCamposSeleccion();
-
-        // Validaciones de documentos
         validarDocumentos();
     }
 
